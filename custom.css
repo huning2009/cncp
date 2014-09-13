@@ -1,0 +1,83 @@
+/* Custom style sheet for web version of "Complex networks, complex processes" */
+
+/* Overall style and typography */
+
+body {
+    background-color: rgb(252, 252, 255);
+    font-family: Baskerville, Times New Roman, Times, serif;
+}
+
+#notebook-container {
+    font-size: 14pt;
+    font-size: 14pt;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.rendered_html h1 {
+    font-size: 50pt;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: -100px;
+    margin-right: 0px;
+}
+
+.rendered_html h2 {
+    font-size: 30pt;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: -100px;
+    margin-right: 0px;
+}
+
+.rendered_html h3 {
+    font-size: 18pt;
+    font-style: italic;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+
+/* Figures */
+
+.rendered_html div.figure {
+    font-size: 14pt;
+}
+
+.rendered_html div.figure div.figurebody {
+    align: center;
+}
+
+.rendered_html div.figure span.caption {
+    font-style: italic;
+}
+
+
+/* Code and cells */
+
+.rendered_html code {
+    font-style: Courier, monospace;
+    background-color: rgb(252, 252, 255);
+}
+
+div.input_prompt {
+    font-size: 10pt;
+}
+
+div.code_cell {
+    background-color: rgb(240, 240, 255);
+}
+
+div.code_cell pre {
+    background-color: rgb(252, 252, 255);
+    font-size: 10pt;
+}
+
+
+
+
+

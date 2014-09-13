@@ -1,0 +1,20 @@
+/* Custom style sheet for ebook version of "Complex networks, complex processes" */
+
+/* Overall style and typography */
+
+body {
+    background-color: rgb(252, 252, 255);
+    font-family: Baskerville, Times New Roman, Times, serif;
+    font-size: 10pt;
+}
+
+.inline-maths {
+    position: relative;
+    top: 4pt;
+}
+
+.display-maths {
+    align: center;
+}
+
+
