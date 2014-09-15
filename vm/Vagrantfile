@@ -25,18 +25,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   vb.customize ["modifyvm", :id, "--memory", "1024"]
   # end
 
-  # Provision machine using local Chef recipes
+  # Provision machine as network science worker
+  # using local Chef-Solo recipes
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = "provisioning/cookbooks"
-
-    # Before provisioning, make sure the base box has an
-    # up-to-date package tree
-    chef.add_recipe "apt-get-update"
-
-    # NetworkX and other worker software
-    chef.add_recipe "python-networkx"
-
-    # Set up cncp user and SSH access
-    chef.add_recipe "cncp"
+    chef.add_recipe "cncp-worker"
   end
 end
