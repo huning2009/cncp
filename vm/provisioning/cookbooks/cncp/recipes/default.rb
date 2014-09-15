@@ -1,22 +1,27 @@
-# Default user for compute engine
-user "cncp" do
-  comment "Complex networks, complex processes"
-  gid "users"
-  home "/home/cncp"
-  shell "/bin/bash"
-  supports :manage_home => true
+#
+# Cookbook Name:: cncp
+# Recipe:: default
+#
+# Copyright (C) 2014 Simon Dobson <simon.dobson@computer.org>
+#
+
+# Override attributes for user-utils recipes
+node.override['user-utils']['username'] = node['cncp']['username']
+node.override['user-utils']['description'] = node['cncp']['description']
+node.override['user-utils']['ssh-public-key'] = node['cncp']['ssh-public-key']
+
+# Create network science worker user and home directory
+include_recipe 'user-utils::user'
+
+# Install SSH keys
+include_recipe "user-utils::ssh"
+
+# Install welcome message
+cookbook_file "motd" do
+  path "/etc/motd"
+  owner "root"
+  group "root"
+  mode "644"
 end
 
-# Install SSH key into ~/.ssh
-directory "/home/cncp/.ssh" do
-  owner "cncp"
-  group "users"
-  mode "700"
-end
-cookbook_file "authorized_keys" do
-  path "/home/cncp/.ssh/authorized_keys"
-  owner "cncp"
-  group "users"
-  mode "600"
-end
 

@@ -30,7 +30,7 @@ REMOTE_HOST = away.simondobson.org
 REMOTE_DIR = /var/www/simondobson.org/complex-networks-complex-processes
 
 # Timestamping
-TIMESTAMP = `date "+%Y-%M-%d %H:%M"`
+TIMESTAMP = `date "+%Y-%m-%d %H:%M"`
 UPLOADED = UPLOADED.txt
 
 

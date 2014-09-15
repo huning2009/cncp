@@ -50,6 +50,15 @@ def remove_styling( doc ):
         elem.extract()
 
 
+def rewrite_mathjax( doc ):
+    """Rewrite to the correct Mathjax CDN URL. It seems to have moved
+    from the version built-in to IPython."""
+    mathjax = re.compile("/mathjax/")
+    scripts = doc('script', src = mathjax)
+    for script in scripts:
+        script['src'] = 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+
+
 def rewrite_internotebook_links( doc ):
     """Re-write inter-notebook links resolved via the IPython notebook
     server into links to the corresponding generated HTML files"""

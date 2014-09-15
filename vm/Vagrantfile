@@ -5,14 +5,15 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "hashicorp/precise32"
+  # config.vm.box = "hashicorp/precise32"
+  config.vm.box = "ubuntu/trusty32"
   # config.vm.box_check_update = false
 
   # config.vm.network "forwarded_port", guest: 80, host: 8080
   # config.ssh.forward_agent = true
 
   # Make VM appear on local network
-  #config.vm.network "public_network"
+  config.vm.network "public_network"
 
   # config.vm.synced_folder "../data", "/vagrant_data"
 
@@ -30,13 +31,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Before provisioning, make sure the base box has an
     # up-to-date package tree
-    #chef.add_recipe "apt-get-update"
+    chef.add_recipe "apt-get-update"
 
-    # Basic networking and NetworkX
-    #chef.add_recipe "network-utils"
-    #chef.add_recipe "python-networkx"
+    # NetworkX and other worker software
+    chef.add_recipe "python-networkx"
 
-    # Final set-up for cncp user and engine start-up
+    # Set up cncp user and SSH access
     chef.add_recipe "cncp"
   end
 end

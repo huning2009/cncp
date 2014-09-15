@@ -1,11 +1,49 @@
-# python-networkx
+# python-networkx-cookbook
 
-This recipe installs Python and NetworkX in a "headless"
-mode, without graphics. This enables the VM to be used
-as a compute server for IPython, without the overheads
-of visualisation or needing an X server.
+Install NetworkX, a Python library for network science.
 
-To get this behaviour we have to compile NetworkX from
-source, as its packaged forms all pull in graphical
-dependencies.
+The default installs NetworkX in "headless" mode that
+doesn't pull in the graohical dependencies, allowing
+the resulting VM to run headless and be used solely as
+a compute server.
 
+## Supported Platforms
+
+Unbuntu, and any other Linuxen.
+
+## Attributes
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>['python-networkx']['networkx-url']</tt></td>
+    <td>String</td>
+    <td>URL to the svn NetworkX software distribution</td>
+    <td><tt>"https://networkx.lanl.gov/svn/networkx/trunk"</tt></td>
+  </tr>
+</table>
+
+## Usage
+
+### python-networkx::default
+
+Install NetworkX headless. Equivalent to:
+
+```json
+{
+  "run_list": [
+    "recipe[python-networkx::python]",
+    "recipe[python-networkx::ipython]",
+    "recipe[python-networkx::headless]"
+  ]
+}
+```
+
+## License and Authors
+
+Author:: Simon Dobson (<simon.dobson@computer.org>)

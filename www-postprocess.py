@@ -14,6 +14,7 @@ try:
 
     rewrite_internotebook_links(doc)
     rewrite_title(doc)
+    rewrite_mathjax(doc)
     rewrite_embedded_media(doc)
     
     write_html(doc)
