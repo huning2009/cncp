@@ -5,6 +5,7 @@
 # IPython notebooks in book order
 HEADER = complex-networks-complex-processes.ipynb
 NOTEBOOKS =  \
+	preface.ipynb \
 	introduction.ipynb \
 	concepts.ipynb \
 	er-networks.ipynb \
