@@ -77,7 +77,9 @@ Copyright (c) 2014, Simon Dobson <simon.dobson@computer.org>
 ((* set filename = filename | posix_path *))
 ((*- block figure scoped -*))
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{((( filename )))}
+    %\adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{((( filename )))}
+    %\includegraphics[scale=0.5]{((( filename )))}
+    \adjustimage{max size={0.75\linewidth}{0.3\paperheight}}{((( filename )))}
     \end{center}
     { \hspace*{\fill} \\}
 ((*- endblock figure -*))

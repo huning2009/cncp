@@ -196,11 +196,12 @@ gen-pdf: $(PDF_FILES) $(UPLOADED)
 pdf: gen-pdf
 	cd $(PDF_BUILD) && \
 	$(PDFLATEX) $(PDF_SKELETON) ; \
-	$(PDFLATEX) $(PDF_SKELETON)
+	$(PDFLATEX) $(PDF_SKELETON) ; \
+	exit 0
 
 # Upload PDF version of book
 upload-pdf: pdf
-	cd $(EPUB_BUILD) && \
+	cd $(PDF_BUILD) && \
 	$(RSYNC) \
 	$(PDF) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
