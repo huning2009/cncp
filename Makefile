@@ -23,7 +23,6 @@ IMAGES = cc-at-nc-sa.png \
 	qr.png \
 	konigsberg-bridges.png
 BIB = complex-networks.bib
-DC_METADATA = metadata.xml
 
 # Remote destination
 # (assumes the necessary keys are already installed)
@@ -68,13 +67,22 @@ HTML_STYLESHEET = custom.css
 HTML_PLUGINS = JSAnimation
 HTML_NOTEBOOKS = $(HEADER:.ipynb=.html) $(NOTEBOOKS:.ipynb=.html) $(BIB_NOTEBOOK:.ipynb=.html)
 HTML_FILES = $(HTML_NOTEBOOKS)
-HTML_NOTEBOOK_EXTRAS = $(NOTEBOOKS:.ipynb=_files)
-HTML_EXTRAS = $(HTML_STYLESHEET) $(HTML_PLUGINS) $(IMAGES)
+HTML_EXTRAS = \
+	$(NOTEBOOKS:.ipynb=_files) \
+	$(HTML_STYLESHEET) \
+	$(HTML_PLUGINS) \
+	$(IMAGES) \
+	$(UPLOADED)
 WWW_POSTPROCESS = ./www-postprocess.py
 
 # Zip'ped notebook output
 ZIP_FILE = complex-networks-complex-processes.zip
-ZIP_FILES = $(HEADER) $(NOTEBOOKS) $(BIB_NOTEBOOK) $(BIB) $(IMAGES) $(HTML_PLUGINS)
+ZIP_FILES = \
+	$(HEADER) \
+	$(NOTEBOOKS) \
+	$(BIB_NOTEBOOK) $(BIB) \
+	$(IMAGES) $(HTML_PLUGINS) \
+	$(UPLOADED)
 
 # PDF output
 PDF_BUILD = build/pdf
@@ -86,8 +94,11 @@ PDF_FRONTMATTER = front.tex
 PDF_BACKMATTER = back.tex
 PDF_NOTEBOOKS = $(NOTEBOOKS:.ipynb=.tex) $(BIB_NOTEBOOK:.ipynb=.tex)
 PDF_FILES = $(PDF_SKELETON) $(PDF_NOTEBOOKS) bibliography.tex
-PDF_EXTRAS = $(PDF_FRONTMATTER) $(PDF_BACKMATTER) $(PDF_NOTEBOOKS:.tex=_files) $(IMAGES)
-PDF_POSTPROCESS = ./pdf-postprocess.py
+PDF_EXTRAS = \
+	$(UPLOADED) \
+	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
+	$(PDF_NOTEBOOKS:.tex=_files) \
+	$(IMAGES)
 
 
 # ----- Top-level targets -----
@@ -121,6 +132,12 @@ clean-bib:
 	$(RM) ttt1.html ttt2.html
 
 
+# ----- Creation timestamp -----
+
+$(UPLOADED):
+	echo "Last updated $(TIMESTAMP)" >$(UPLOADED)
+
+
 # ----- Notebook (ZIP) distribution -----
 
 # Package notebooks as a ZIP file
@@ -152,10 +169,9 @@ www: gen-www
 # Upload HTML version of book
 upload-www: www
 	cd $(HTML_BUILD) && \
-	echo "Last updated $(TIMESTAMP)" >$(UPLOADED) && \
 	$(RSYNC) \
 	$(UPLOADED) \
-	$(HTML_FILES) $(HTML_NOTEBOOK_EXTRAS) $(HTML_EXTRAS) \
+	$(HTML_FILES) $(HTML_EXTRAS) \
 	$(EXTRA_FILES) \
 	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
@@ -168,7 +184,7 @@ clean-www:
 # ----- PDF distribution -----
 
 # PDF post-processing (quite expensive)
-postprocess-pdf: $(PDF_FILES)
+postprocess-pdf: $(PDF_FILES) $(UPLOADED)
 	$(MKDIR) $(PDF_BUILD)
 	$(MKDIR) $(PDF_NOTEBOOKS:.tex=_files) 
 	$(CP) $(PDF_FILES) $(PDF_EXTRAS) $(PDF_BUILD)
@@ -176,6 +192,7 @@ postprocess-pdf: $(PDF_FILES)
 # Generate PDF file via LaTeX
 gen-pdf:
 	cd $(PDF_BUILD) && \
+	$(PDFLATEX) $(PDF_SKELETON) && \
 	$(PDFLATEX) $(PDF_SKELETON)
 
 # Build PDF book
