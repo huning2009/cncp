@@ -68,7 +68,6 @@ HTML_PLUGINS = JSAnimation
 HTML_NOTEBOOKS = $(HEADER:.ipynb=.html) $(NOTEBOOKS:.ipynb=.html) $(BIB_NOTEBOOK:.ipynb=.html)
 HTML_FILES = $(HTML_NOTEBOOKS)
 HTML_EXTRAS = \
-	$(NOTEBOOKS:.ipynb=_files) \
 	$(HTML_STYLESHEET) \
 	$(HTML_PLUGINS) \
 	$(IMAGES) \
@@ -97,7 +96,6 @@ PDF_FILES = $(PDF_SKELETON) $(PDF_NOTEBOOKS) bibliography.tex
 PDF_EXTRAS = \
 	$(UPLOADED) \
 	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
-	$(PDF_NOTEBOOKS:.tex=_files) \
 	$(IMAGES)
 
 
@@ -110,8 +108,9 @@ all: zip www pdf
 upload: upload-zip upload-www upload-pdf
 
 # Clean up the build
-clean: clean-bib clean-zip clean-www clean-pdf
+clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf
 	$(RM) $(HTML_NOTEBOOKS)
+	$(RM) $(NOTEBOOKS:.ipynb=_files) 
 
 
 # ----- Bibliography in a notebook -----
@@ -129,13 +128,17 @@ $(BIB_NOTEBOOK): $(BIB) $(BIBHTML) $(BIB_NOTEBOOK_TEMPLATE)
 # Clean the generated notebook
 clean-bib:
 	$(RM) $(BIB_NOTEBOOK) $(BIBHTML)
-	$(RM) ttt1.html ttt2.html
 
 
 # ----- Creation timestamp -----
 
+# Generate a timestamp file
 $(UPLOADED):
 	echo "Last updated $(TIMESTAMP)" >$(UPLOADED)
+
+# Clean the timestamp file
+clean-uploaded:
+	$(RM) $(UPLOADED)
 
 
 # ----- Notebook (ZIP) distribution -----
@@ -158,7 +161,7 @@ clean-zip:
 # ----- Interactive HTML (www) distribution -----
 
 # Pre-process notebooks to HTML
-gen-www: $(HTML_FILES) $(HTML_EXTRAS)
+gen-www: $(HTML_FILES)
 
 # Build HTML (web) versions of notebooks
 www: gen-www
@@ -183,20 +186,17 @@ clean-www:
 
 # ----- PDF distribution -----
 
-# PDF post-processing (quite expensive)
-postprocess-pdf: $(PDF_FILES) $(UPLOADED)
+# PDF post-processing
+gen-pdf: $(PDF_FILES) $(UPLOADED)
 	$(MKDIR) $(PDF_BUILD)
-	$(MKDIR) $(PDF_NOTEBOOKS:.tex=_files) 
+	$(foreach dn, $(PDF_NOTEBOOKS:.tex=_files), if [ -d $(dn) ]; then $(CP) $(dn) $(PDF_BUILD); fi;)
 	$(CP) $(PDF_FILES) $(PDF_EXTRAS) $(PDF_BUILD)
 
 # Generate PDF file via LaTeX
-gen-pdf:
+pdf: gen-pdf
 	cd $(PDF_BUILD) && \
-	$(PDFLATEX) $(PDF_SKELETON) && \
+	$(PDFLATEX) $(PDF_SKELETON) ; \
 	$(PDFLATEX) $(PDF_SKELETON)
-
-# Build PDF book
-pdf: postprocess-pdf gen-pdf
 
 # Upload PDF version of book
 upload-pdf: pdf
