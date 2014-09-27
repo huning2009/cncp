@@ -14,6 +14,7 @@ NOTEBOOKS =  \
 	spectral.ipynb \
 	epidemic-spreading.ipynb \
 	percolation.ipynb \
+	geodata.ipynb \
 	parallel.ipynb \
 	software.ipynb
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
@@ -44,9 +45,10 @@ CONVERT = $(IPYTHON) nbconvert
 
 # Other tools
 RSYNC = rsync -av
-BIBTEX = bib2x --nodoi -t --barebones --html --visiblekeys
+BIB2X = bib2x --nodoi --visiblekeys
 PANDOC = pandoc
 PDFLATEX = pdflatex --interaction batchmode
+BIBTEX = bibtex
 RM = rm -fr
 MKDIR = mkdir -p
 CP = cp -r
@@ -55,8 +57,9 @@ SED = sed -E
 ZIP = zip
 TAIL = tail
 
-# Bibliography in a notebook
-BIBHTML = $(BIB:.bib=.html)
+# Bibliography
+BIB_HTML = $(BIB:.bib=.html)
+BIB_TEX = $(BIB:.bib=.tex)
 BIB_NOTEBOOK = bibliography.ipynb
 
 # Web HTML output
@@ -91,10 +94,11 @@ PDF = complex-networks-complex-processes.pdf
 PDF_SKELETON = complex-networks-complex-processes.tex
 PDF_FRONTMATTER = front.tex
 PDF_BACKMATTER = back.tex
-PDF_NOTEBOOKS = $(NOTEBOOKS:.ipynb=.tex) $(BIB_NOTEBOOK:.ipynb=.tex)
-PDF_FILES = $(PDF_SKELETON) $(PDF_NOTEBOOKS) bibliography.tex
+PDF_NOTEBOOKS = $(NOTEBOOKS:.ipynb=.tex)
+PDF_FILES = $(PDF_SKELETON) $(PDF_NOTEBOOKS) $(BIB_TEX)
 PDF_EXTRAS = \
 	$(UPLOADED) \
+	$(BIB) \
 	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
 	$(IMAGES)
 
@@ -115,19 +119,16 @@ clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf
 
 # ----- Bibliography in a notebook -----
 
-# Build the notebook
-bib: $(BIB_NOTEBOOK)
-
 # Populate the bibliography template notebook
-$(BIB_NOTEBOOK): $(BIB) $(BIBHTML) $(BIB_NOTEBOOK_TEMPLATE)
-	$(SED) -e 's/"/\\"/g' -e 's/.*/"&"/g' <$(BIBHTML) >tmp1.html
+$(BIB_NOTEBOOK): $(BIB) $(BIB_HTML) $(BIB_NOTEBOOK_TEMPLATE)
+	$(SED) -e 's/"/\\"/g' -e 's/.*/"&"/g' <$(BIB_HTML) >tmp1.html
 	$(TAIL) +1 tmp1.html | ($(SED) -e 's/.*/&,/g' ; $(TAIL) -1 tmp1.html) >tmp2.html
 	$(SED) -e '/%%BIBLIOGRAPHY%%/r tmp2.html' -e '/%%BIBLIOGRAPHY%%/d'  <$(BIB_NOTEBOOK_TEMPLATE) >$(BIB_NOTEBOOK)
 	$(RM) tmp1.html tmp2.html
 
-# Clean the generated notebook
+# Clean the generated notebook and LaTeX file
 clean-bib:
-	$(RM) $(BIB_NOTEBOOK) $(BIBHTML)
+	$(RM) $(BIB_NOTEBOOK) $(BIB_HTML) $(BIB_TEX)
 
 
 # ----- Creation timestamp -----
@@ -195,8 +196,8 @@ gen-pdf: $(PDF_FILES) $(UPLOADED)
 # Generate PDF file via LaTeX
 pdf: gen-pdf
 	cd $(PDF_BUILD) && \
-	$(PDFLATEX) $(PDF_SKELETON) ; \
-	$(PDFLATEX) $(PDF_SKELETON) ; \
+	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
+	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
 	exit 0
 
 # Upload PDF version of book
@@ -226,5 +227,8 @@ clean-pdf:
 	$(CONVERT) --to markdown $<
 
 .bib.html:
-	$(BIBTEX) $(BIB) >$(BIBHTML)
+	$(BIB2X) --html --barebones $(BIB) >$(BIB_HTML)
+
+.bib.tex:
+	$(BIB2X) --latex $(BIB) >$(BIB_TEX)
 
