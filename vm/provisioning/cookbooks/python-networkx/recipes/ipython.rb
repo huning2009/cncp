@@ -9,7 +9,10 @@
 package "python-pip"
 package "python-setuptools"
 
-# Install IPython using pipm as the versions in the
+# Need ZeroMQ for parallel processing support
+package "python-zmq"
+
+# Install IPython using pip, as the versions in the
 # distro repos are often out of date
 script "install-ipython" do
   interpreter "bash"

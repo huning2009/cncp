@@ -40,9 +40,32 @@ Install NetworkX headless. Equivalent to:
     "recipe[python-networkx::python]",
     "recipe[python-networkx::ipython]",
     "recipe[python-networkx::headless]"
+    "recipe[python-networkx::mapping]"
   ]
 }
 ```
+
+### python-networkx::python
+
+Install Python and some essential packages like ```numpy```.
+
+### python-networkx::ipython
+
+Install IPython from sources. This is necessay because the
+version of IPython in the typical repos is out of date wit
+respect to the main tree -- and we need a recent version.
+
+### python-networkx::headless
+
+Install ```NetworkX```, again from sources. This time it's to
+get the katest version, but also because we want to run the VM
+headless (without any display), and a packaged version would
+pull in the graphics dependencies. 
+
+### python-networkx::mapping
+
+Install some additional packages used for geographical data
+and mapping.
 
 ## License and Authors
 

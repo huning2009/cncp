@@ -10,5 +10,4 @@ package "python"
 
 # Required packages
 package "python-numpy"
-package "python-zmq"
 
