@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: python-networkx
-# Recipe:: default
+# Recipe:: with-graphics
 #
 # Copyright (C) 2014 Simon Dobson
 #

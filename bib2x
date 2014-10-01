@@ -1,0 +1,935 @@
+#!/usr/bin/perl
+
+# bib2x -- convert a BibTeX bibliography into a wiki page, LaTeX bibliography etc
+# Copyright (c) 2006--2012, Simon Dobson <simon.dobson@computer.org>
+#
+# This is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this software; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use strict;
+use Carp;
+use Getopt::Long;
+use File::Basename;
+
+my ($bibfile, $yearOrder, $standalone, $numberReferences, $keywords, $format, $css, $extras, $nolinks, $nodoi, $visiblekeys, $barebones);
+my $sectiondepth = 2; # subsection or h2
+my $citations = 0; # no limit to cut-off citations 
+my $objecturlbase = "/softcopy";
+my $rc = GetOptions("y" => \$yearOrder,
+		    "n" => \$numberReferences,
+		    "t" => \$standalone,
+		    "k|keywords=s" => sub {
+			shift;   $keywords = shift;
+			$keywords =~ s/,\s*/)|(/g;   $keywords = "($keywords)";
+		    },
+		    "h|help" => \&usage,
+		    "text" => sub { $format = "text"; },
+		    "plain" => sub { $format = "text"; },
+		    "html" => sub { $format = "html"; },
+		    "wiki" => sub { $format = "wiki"; },
+		    "bibtex|bib" => sub { $format = "bibtex"; },
+		    "tex|latex" => sub { $format = "tex"; },
+		    "docbook|xml" => sub { $format = "xml"; },
+		    "depth=n" => \$sectiondepth,
+		    "flat|nolinks" => \$nolinks,
+		    "V|visiblekeys" => \$visiblekeys,
+		    "citations=n" => \$citations,
+		    "B|barebones" => \$barebones,
+		    "base|b=s" => sub { shift;   $objecturlbase = shift; },
+		    "nodoi" => \$nodoi, 
+		    "css=s" => sub { shift;   $css = shift; },
+		    "x|extras" => \$extras,
+    );
+$bibfile = shift;
+usage() unless($format);
+
+# Suck-in the file
+my $bib;
+open BIBFILE, "<$bibfile" || croak "Can't open $bibfile\n";
+while(<BIBFILE>)
+{ $bib .= $_; }
+close BIBFILE;
+
+# Parse the bibfile
+my (%var, @sections, %years);
+parseBibfile();
+
+# Print the references
+my $timestamp = localtime(time);
+if($format eq "xml") {
+    # for XML, convert the reference file
+    printXML();
+} else {
+    # for other formats, generate the textual representation
+    printPreamble();
+    if($yearOrder)
+    { printByYear(); }
+    else
+    { printBySection(); }
+    printPostamble();
+}
+
+
+# --------------------------------------------------
+
+# Parse the bibfile into list of sections
+sub parseBibfile
+{
+    my ($n, $v, $ref, $key, $fs, $type, $h, $y, $yl);
+    my $section = [ "Default" ];
+    
+  REF:    while($bib !~ m/^\s*$/s)
+  {
+      $bib =~ s/^\s*//s;
+      
+      # metadata and sub-headings
+      if($bib =~ m/^%\s*([a-zA-Z]+):\s*(.*?)\n(.*)$/s)
+      {
+	  # bib2html variable
+	  $n = $1;   $n =~ y/A-Z/a-z/;
+	  $var{$n} = $2;   $bib = $3;
+      }
+      elsif($bib =~ m/^%%%\s*(.*?)\s*%%%\n(.*)$/s)
+      {
+	  # bib2html title becomes sub-heading
+	  push @sections, $section;
+	  $section = [ $1 ];
+	  $bib = $2;
+      }
+      elsif($bib =~ m/^%.*?\n(.*)$/s)
+      {
+	  # comment
+	  $bib = $1;
+      }
+      elsif($bib =~ m/^\@string{[^}=]+\s*=[^}]*}(.*)$/is)
+      {
+	  # string declarations are ignored for now
+	  $bib = $1;
+      }
+      elsif($bib =~ m/^\@preamble{[^}]*}(.*)$/is)
+      {
+	  # ...as is any preamble
+	  $bib = $1;
+      }
+      
+      # entries
+      elsif($bib =~ /(@([a-zA-Z]+){([a-zA-Z0-9_\-\.\:\/]+)\s*,((\s*[a-zA-Z]+\s*=\s*([^\n]+),?)+)\s*\})\s*(.*)$/s)
+      {
+	  $ref = $1;   $bib = $7;
+	  $fs = $4;   $key = $3;
+	  $type = $2;   $type =~ y/A-Z/a-z/;
+	  
+	  # create a hash of the fields
+	  $h = {};
+	  $h->{type} = $type;   $h->{key} = $key;
+	  while($fs =~ /^\s*([a-zA-Z\-]+)\s*=\s*([^\n]+),?(.*)$/s)
+	  {
+	      $fs = $3;   $n = $1;   $v = $2;
+	      $v =~ s/^\s*[\"\{]?\s*//;   $v =~ s/\s*[\"\}]?\s*,?\s*$//;
+	      
+	      $h->{$n} = $v;
+	  }
+	  
+	  # if we have keywords, filter on them
+	  if(defined($keywords))
+	  {
+	      unless(($h->{"author"} =~ m/$keywords/i) ||
+		     ($h->{"title"} =~ m/$keywords/i) ||
+		     ($h->{"keywords"} =~ m/$keywords/i))
+	      { next REF; }
+	  }
+	  
+	  # add to current section
+	  push @$section, $h;
+	  
+	  # add to the correct year
+	  $y = $h->{"year"};   $y = "Submitted or in preparation" unless(defined($y));
+	  $yl = $years{$y};
+	  unless(defined($yl))
+	  {
+	      $yl = [];
+	      $years{$y} = $yl;
+	  }
+	  push @$yl, $h;
+      }
+      
+      else
+      {
+	  # badly-formed file, try to continue after warning about it
+	  my $place = substr $bib, 0, 50;
+	  print "Badly-formed BibTeX database ($place ...)";
+	  $bib =~ s|^([^@]*)||s;
+      }
+  }
+    push @sections, $section;
+    
+    # sort out variables
+    if(defined($var{"email"}))
+    { $var{"email"} =~ s/%/@/; }
+}
+
+
+# Layout authors
+sub authors
+{
+    my $field = shift;
+    if(defined($field))
+    {
+	my @authors = split m!\s+and\s+!, $field;
+	@authors = map { s/[{}]//g;   $_; } @authors;
+	if(scalar(@authors) == 1)
+	{ return shift @authors; }
+	else
+	{
+	    my $last = pop @authors;
+	    return renderNormal((join ", ", @authors) . " and $last");
+	}
+    }
+    else
+    { return undef }
+}
+
+
+# Print a preamble depending on the output format
+sub printPreamble
+{
+    my $t = $var{title};
+    
+    if($format =~ /(bib)?tex/)
+    {
+	# standalone LaTeX preamble
+	if($standalone)
+	{
+	    print <<EOP;
+\\documentclass[twoside,english]{article}
+
+\\usepackage{pslatex}
+\\usepackage[T1]{fontenc}
+\\usepackage[latin1]{inputenc}
+\\usepackage{a4}
+\\usepackage{bibentry}
+
+\\pagestyle{plain}
+\\setlength\\parskip{\\medskipamount}
+\\setlength\\parindent{0pt}
+
+\\renewcommand{\\subsection}[1]{\\medskip\\textbf{#1}}
+
+\\makeatother
+
+\\begin{document}
+
+\\begin{center}
+{\\large \\textbf{$t}}
+\\medskip
+\\end{center}
+
+EOP
+	}
+
+	# nobibliography package 
+        if($format eq "bibtex")
+        {
+	    my $base = basename($bibfile, ".bib");
+            print "\\bibliographystyle{plain}\n";
+	    print "\\nobibliography{$base}\n\n\n";
+	}
+    }
+    elsif($format eq "html")
+    {
+	if($standalone)
+        {
+            my $csstag = "";
+            if(defined($css))
+                { $csstag = "<link rel=\"stylesheet\" type=\"text/css\" href=\"$css\"/>\n"; }
+
+            if($barebones)
+            {
+                print <<EOP;
+<html>
+<body>
+<h1>$t</h1>
+EOP
+            }
+            else
+            {
+                print <<EOP;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>$t</title>
+    <meta name="generator" content="bib2x"/>
+    $csstag
+  </head>
+  <body>
+    <h1 class="title">$t</h1>
+EOP
+            }
+        }
+    }
+    elsif($format eq "wiki")
+    {
+	if($standalone) { print "* " . $var{title} . "\n\n"; }
+    }
+    elsif($format eq "text")
+    {
+	if($standalone) { print $var{title} . "\n\n"; }
+    }
+}
+
+
+# Print postamble depending on output format
+sub printPostamble
+{
+    if($format =~ /(bib)?tex/)
+    {
+	if($standalone)
+	{
+	   print <<EOP;
+
+\\vfill
+\\raggedleft{\\tiny Generated by bib2x, $timestamp}
+
+\\end{document}
+EOP
+	}
+    }
+    elsif($format eq "html")
+    {
+	if($standalone)
+        {
+	    if($barebones)
+	    {
+		print <<EOP;
+</body>
+</html>
+EOP
+            }
+	    else
+	    {
+		print <<EOP;
+    <p>
+    <div class="footer">Generated by bib2x, $timestamp</div>
+  </body>
+</html>
+
+EOP
+            }
+        }
+    }
+}
+
+
+# Print the references by section
+sub printBySection
+{
+    my ($section, $last, $ref, $t);
+    while(scalar(@sections) > 0)
+    {
+	$section = shift @sections;
+	$t = shift @$section;
+	if(defined($last) && (scalar(@$section) > 0))
+	{
+	    if($format eq "wiki")
+	    { print ("*" x $sectiondepth); print $t; print  ("*" x $sectiondepth); print "\n\n"; }
+	    elsif($format eq "text")
+	    { print "$t\n\n"; }
+	    elsif($format eq "html")
+	    { print "<h" . $sectiondepth . ($barebones ? "" : " class=\"sectiontype\"") . ">$t</h" . $sectiondepth . ">\n\n"; }
+	    elsif($format =~ /(bib)?tex/)
+	    { print "\\textbf{$t}\n\n"; }
+	}    
+	printReferences($section);
+	$last = $section;
+    }
+}
+
+
+# Print the references by year
+sub printByYear
+{
+    my (@ys, $y, $year, $ref);
+    @ys = reverse (sort (keys %years));
+    foreach $y (@ys)
+    {
+	$year = $years{$y};
+	if($format eq "wiki")
+	{ print ("*" x $sectiondepth); print $y; print  ("*" x $sectiondepth); print "\n\n"; }
+	elsif($format eq "text")
+	{ print "$y\n\n"; }
+	elsif($format eq "html")
+	{ print "<h" . $sectiondepth . " class=\"sectionyear\">$y</h" . $sectiondepth . ">\n\n"; }
+	elsif($format =~ /(bib)?tex/)
+	{ print "\\textbf{$y}\n\n"; }
+	printReferences($year);
+    }
+}
+
+
+# Print a list of references
+sub printReferences
+{
+    my $l = shift;
+    my $ref;
+
+    if($numberReferences) {
+	print renderStartOfList();
+    }
+    while(scalar(@$l) > 0)
+    {
+	$ref = shift @$l;
+	if($numberReferences) {
+	    print "<li>\n" if($format eq "html");
+	    print "\\item\n" if($format eq "tex");
+	} else {
+	    print "<p>\n" if($format eq "html");
+	    print "\\par\n" if($format eq "tex");
+	}
+	if($format eq "bibtex")
+	{ print "\\bibentry{" . $ref->{key} . "}\n\n"; }
+	else
+	{ print renderPlain($ref) . "\n\n"; }
+    }
+    if($numberReferences) {
+	print renderEndOfList();
+    }
+}
+
+
+# Render something as normal text
+sub renderNormal
+{
+    my $text = shift;
+    if($format eq "wiki")
+    { return detex($text); }
+    elsif($format eq "html")
+    { return detex($text); }
+    elsif($format =~ /(bib)?tex/)
+    { return deemphasise($text); }
+    else
+    { return $text; }
+}
+# Render something as italic
+sub renderItalic
+{
+    my $text = shift;
+    if($format eq "wiki")
+    { return "*" . detex($text) . "*"; }
+    elsif($format eq "html")
+    { return "<i>" . detex($text) . "</i>"; }
+    elsif($format =~ /(bib)?tex/)
+    { return "\\textit{" . deemphasise($text) . "}"; }
+    else
+    { return $text; }
+}
+# Render something as bold
+sub renderBold
+{
+    my $text = shift;
+    if($format eq "wiki")
+    { return "**" . detex($text) . "**"; }
+    elsif($format eq "html")
+    { return "<b>" . detex($text) . "</b>"; }
+    elsif($format =~ /(bib)?tex/)
+    { return "\\textbf{" . deemphasise($text) . "}"; }
+    else
+    { return $text; }
+}
+# Render something as a link
+sub renderLink
+{
+    my $url = shift;  my $anchor = shift;
+    return $anchor if($nolinks);
+    if(($url =~ m|^doi://.*|) && $nodoi)
+    { $url =~ s|^doi://(.*)|http://dx.doi.org/$1|; }
+    if($format eq "wiki")
+    { return "[[$url][" . detex($anchor) . "]]"; }
+    elsif($format eq "html")
+    { return "<a" . ($barebones ? "" : " class=\"ref\"") . " href=\"$url\">" . detex($anchor) . "</a>"; }
+    elsif($format =~ /(bib)?tex/)
+    { return "\\href{" . esctex($url) . "}{$anchor}"; }
+    else
+    { return $anchor; }
+}
+# Render start and end of reference markers
+sub renderStartOfReference
+{
+    my $key = shift;
+    return "" if($nolinks);
+    if($format eq "html")
+    { return "<a id=\"$key\"/>" . ($visiblekeys ? "[$key]" : "") . "</a> "; }
+    elsif($format =~ /(bib)?tex/)
+    { return ($visiblekeys ? "\\label{$key}[$key] " : ""); }
+    else
+    { return ""; }
+}
+sub renderEndOfReference
+{ return ""; }
+# Render numbered lists
+sub renderStartOfList
+{
+    if($format eq "html")
+    { return "<ol class=\"refs\">\n"; }
+    elsif($format =~ /((bib)|(la))?tex/)
+    { return "\\begin{enumerate}\n"; }
+}
+sub renderEndOfList
+{
+    if($format eq "html")
+    { return "</ol>\n"; }
+    elsif($format =~ /((bib)|(la))?tex/)
+    { return "\\end{enumerate}\n"; }
+}
+
+# Remove TeX-isms that have found their way into the BibTeX
+sub deemphasise
+{
+    my $v = shift;
+    if($format eq "html") {
+	# replace emphasis with appropriate HTML mark-up
+	$v =~ s|\\emph{([^}]*)}|<em>$1</em>|g;
+	$v =~ s|\\textit{([^}]*)}|<i>$1</i>|g;
+	$v =~ s|\\strong{([^}]*)}|<em>$1</em>|g;
+	$v =~ s|\\textbf{([^}]*)}|<b>$1</b>|g;
+	$v =~ s|\\texttt{([^}]*)}|<tt>$1</tt>|g;
+	$v =~ s|\\mathcal{([^}]*)}|<span style="font-family: cursive;">$1</span>|g;
+    } else {
+	# remove all emphasis information
+	$v =~ s|\\emph{([^}]*)}|$1|g;
+	$v =~ s|\\textit{([^}]*)}|$1|g;
+	$v =~ s|\\strong{([^}]*)}|$1|g;
+	$v =~ s|\\textbf{([^}]*)}|$1|g;
+	$v =~ s|\\texttt{([^}]*)}|$1|g;
+	$v =~ s|\\mathcal{([^}]*)}|$1|g;
+    }
+    return $v;
+}
+sub detex
+{
+    my $v = shift;
+
+    # remove emphasis etc
+    $v = deemphasise($v);
+	      
+    # brackets for entities in wiki text
+    my ($l, $r);
+    $l = "<literal>" if($format eq "wiki");
+    $r = "</literal>" if($format eq "wiki");
+
+    # because we don't do capitalisation processing we can remove other braces
+    $v =~ tr/{}//d;      
+
+    # remove maths brackets too
+    $v =~ tr/$//d;
+
+    # handle accents and other special characters
+    $v =~ s|\\'(.)|$l&$1acute;$r|g;
+    $v =~ s|\\`(.)|$l&$1grave;$r|g;
+    $v =~ s|\\^(.)|$l&$1circ;$r|g;
+    $v =~ s|\\"(.)|$l&$1uml;$r|g;
+    $v =~ s|\\5(.)|$l&$1cedil;$r|g;
+    $v =~ s|\\ss|$l&szlig$r|g;
+    $v =~ s|\\~(.)|$l&$1tilde;$r|g;
+    $v =~ s|\\([Oo])|$l&$1slash;$r|g;
+    $v =~ s|\\v(s)|&#353;|g;
+    $v =~ s|\\&|$l&amp;$r|g;
+    $v =~ s|---|$l&mdash;$r|g;
+    $v =~ s|--|$l&ndash;$r|g;
+
+    # remaining tildes are hard spaces, and so can be removed
+    $v =~ s|~| |g;
+
+    return $v;
+}
+sub esctex
+{
+    my $v = shift;
+
+    # escape difficult characters
+    $v =~ s/_/\\_/g;
+    $v =~ s/\$/\\\$/g;
+
+    return $v;
+}
+
+# Render a reference in the plain style
+sub renderPlain
+{
+    my $ref = shift;
+
+    # construct the title, with a link if there's a URL field
+    my $type = $ref->{type};
+    my $t = renderNormal($ref->{title});   $t = "Untitled document" unless(defined($t));
+    my $url = renderNormal($ref->{url});
+    unless(defined($url)) {
+	$url = $objecturlbase . "/" . renderNormal($ref->{object}) if(defined($ref->{object}) && ($format ne "tex"))
+    }
+    my $additional = "";
+    my $title = $t;   $title = renderLink($url, $t) if(defined($url));
+	
+    # split the authors (and editors if present) at "and" boundaries
+    my $authors = authors($ref->{author});
+    my $editors = authors($ref->{editor});
+    $editors .= " (ed)" if(defined($editors));
+    if(defined($editors) && (!defined($authors)))
+    { $authors = $editors;   $editors = undef; }
+    
+    # date
+    my $date;
+    $date = " " . renderNormal($ref->{day}) if(defined($ref->{day}));
+    $date = " " . renderNormal($ref->{month}) if(defined($ref->{month}));
+    $date .= " " . renderNormal($ref->{year}) if(defined($ref->{year}));
+    $date .= "." if(defined($date));
+    
+    # switch on the types we can handle
+    my $t;
+    if(defined($authors))
+    {
+	$t = "$authors. ";
+    }
+    elsif(defined($editors))
+    {
+	$t = "$editors. ";
+    }
+    $t .= "$title.";
+    if($type eq "techreport")
+    {
+	# technical report
+	if(defined($ref->{number}))
+	{
+	    $t .=
+		" Technical report " . renderNormal($ref->{number}) . ".";
+	}
+	if(defined($ref->{institution}))
+	{ $t .= " " . renderNormal($ref->{institution}) . "."; }
+    }
+    elsif($type eq "phdthesis")
+    {
+	# doctoral thesis
+	$t .= " PhD thesis";
+	if(defined($ref->{school}))
+	{ $t .= ", " . renderNormal($ref->{school}); }
+	$t .= ".";
+	$t .= " " . renderNormal($ref->{number}) . "." if(defined($ref->{number}));
+    }
+    elsif($type eq "mastersthesis")
+    {
+	# masters thesis
+	$t .= " Master's thesis";
+	if(defined($ref->{school}))
+	{ $t .= ", " . renderNormal($ref->{school}); }
+	$t .= ".";
+	$t .= " " . renderNormal($ref->{number}) . "." if(defined($ref->{number}));
+    }
+    elsif(($type eq "inproceedings") || ($type eq "incollection"))
+    {
+	# paper in proceedings or other collection
+	$t .= " In " . renderNormal($ref->{booktitle});
+	$t .= ", pages " . renderNormal($ref->{pages}) if(defined($ref->{pages}));
+	$t .= ".";
+	$t .= " $editors." if(defined($editors));
+	if(defined($ref->{series}))
+	{
+	    if(defined($ref->{volume}))
+	    { $t .= " Volume " . renderNormal($ref->{volume}) . " of " . renderNormal($ref->{series}) . "."; }
+	    else
+	    { $t .= " " . renderNormal($ref->{series}) . "."; }
+	   }
+	$t .= " " . renderNormal($ref->{publisher}) . "." if(defined($ref->{publisher}));
+    }
+    elsif($type eq "article")
+    {
+	# paper in journal
+	$t .= " " . renderNormal($ref->{journal});
+	if(defined($ref->{volume}))
+	{
+	    if(defined($ref->{number}))
+	    { $t .= " " . renderBold($ref->{volume}) . "(" . renderNormal($ref->{number}) . ")"; }
+	    else
+	    { $t .= " " . renderBold($ref->{volume}); }
+	}
+	elsif(defined($ref->{number}))
+	{ $t = " " . renderNormal($ref->{number}); }
+	$t .= ", pages " . renderNormal($ref->{pages}) if(defined($ref->{pages}));
+	$t .= ".";
+    }
+    elsif(($type eq "book") || ($type eq "proceedings"))
+    {
+	# book or edited proceedings
+	if(defined($ref->{series}))
+	{
+	    if(defined($ref->{volume}))
+	    { $t .= " Volume " . renderNormal($ref->{volume}) . " of " . renderNormal($ref->{series}) . "."; }
+	    else
+	    { $t .= " " . renderNormal($ref->{series}) . "."; }
+	   }
+	$t .= " " . renderNormal($ref->{publisher}) . "." if(defined($ref->{publisher}));
+    }
+    elsif($type =~ /^misc(ellaneous)?/)
+    {
+	# miscellaneous publication
+	$t .= " " . renderNormal($ref->{howpublished}) . "." if(defined($ref->{howpublished}));
+    }
+
+    else
+    {
+	# anything else is treated like unpublished material
+    }
+    
+    # miscellaneous end information
+    $t .= " " . renderNormal($ref->{city}) . "." if(defined($ref->{city}));
+    $t .= $date if(defined($date));
+    $t .= " ISBN " . renderNormal($ref->{isbn}) . "." if(defined($ref->{isbn}));
+    $t .= " " . renderItalic($ref->{note}) . "." if(defined($ref->{note}));
+
+    # add extra metadata if requested
+    my $x;
+    if($extras || $citations)
+    {
+	if(defined($ref->{citations}) && ($ref->{citations} >= $citations))
+	{ $x .= $ref->{citations} . " citations."; }
+    }
+    if($extras)
+    {
+	if(defined($ref->{impactfactor}))
+	{
+	    $x .= " " if(defined($x));
+	    $x .= "Impact factor " . $ref->{impactfactor} . ".";
+	}
+	if(defined($ref->{acceptancerate}))
+	{
+	    $x .= " " if(defined($x));
+	    $x .= "Acceptance rate " . $ref->{acceptancerate} . "%.";
+	}
+	if(defined($ref->{contribution}))
+	{
+	    $x .= " " if(defined($x));
+	    $x .= "Contribution " . $ref->{contribution} . "%.";
+	}
+    }
+    $t .= " " . renderItalic("(" . $x . ")") if(defined($x));
+
+    $t = detex($t) unless($format =~ /tex/);
+
+    return (renderStartOfReference($ref->{key}) . $t . renderEndOfReference($ref->{key}));
+}
+
+
+# Print the references in XML
+sub printXML
+{
+    my (@ys, $y, $year, $ref);
+
+    print <<EOH;
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bibliography PUBLIC "-//OASIS//DTD DocBook V5.0//EN"
+                      "http://www.oasis-open.org/docbook/xml/5.0/docbook.dtd">
+<bibliography  xmlns="http://docbook.org/ns/docbook"
+               xmlns:xi="http://www.w3.org/2001/XInclude"
+               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+               version="5.0"
+               xml:lang="en">
+EOH
+    @ys = reverse (sort (keys %years));
+    foreach $y (@ys)
+    {
+	$year = $years{$y};
+	while(scalar(@$year) > 0)
+	{
+	    $ref = shift @$year;
+	    print renderXML($ref);
+	}
+    }
+    print "</bibliography>\n";
+}
+
+
+# Layout author in XML
+sub authorXML {
+    my $author = $_;
+    my ($a, $fn, $ln);
+
+    if($author =~ m/([~,]+),([~,]+)/) {
+	# comma: assume surname, firstnames
+	$ln = $1;   $fn = $2;
+	$a = "<surname>$ln</surname><firstname>$fn</firstname>";
+    } elsif($author =~ m/(.+)\{(.+)\}/) {
+	# last name in braces, extract
+	$fn = $1;   $ln = $2;
+	$a = "<surname>$ln</surname><firstname>$fn</firstname>";
+    } elsif($author =~ m/(.+)\s+(\w+)/) {
+	# track back from last name looking for common connectives
+	$fn = $1;   $ln = $2;
+	while($fn =~ m/(.+)\s+(([dt]e[rnm]?)|(v[oa]n))$/) {
+	    $fn = $1;   $ln = "$2 $ln";
+	}
+	$a = "<surname>$ln</surname><firstname>$fn</firstname>";
+    } else {
+	# make a surname and hope
+	$a = "<surname>$author</surname>";
+    }
+
+    return "<author>$a</author>";
+}
+
+
+# Render a single reference into the DocBook XML format
+sub renderXML {
+    my $ref = shift;
+    my $type = $ref->{type};
+    my ($field, $e, $f, $as, $es);
+    my $t = "";
+    
+    # title
+    $field = renderNormal($ref->{title});   $field = "Untitled document" unless(defined($field));
+    if(defined($ref->{url}))
+    {
+	$field = "<ulink url=\"" . renderNormal($ref->{url}) . "\">$field</ulink>";
+    }
+    $t = "<title>$field</title>\n";
+
+    # authors
+    $field = $ref->{author};
+    my @authors = split m!\s+and\s+!, $field;
+    @authors = map authorXML, @authors;
+    $f = join "\n", @authors;
+    $t .= "<authorgroup>\n$f\n</authorgroup>\n" if(defined($f) && (length($f) > 0));
+
+    # editors
+    $field = $ref->{editor};
+    my @editors = split m!\s+and\s+!, $field;
+    @editors = map authorXML, @editors;
+    $f = join "\n", @editors;
+    $es .= "<editorgroup>\n$f\n</editorgroup>\n" if(defined($f) && (length($f) > 0));
+        
+    # date
+    $f = renderNormal($ref->{day}) if(defined($ref->{day}));
+    $f = " " . renderNormal($ref->{month}) if(defined($ref->{month}));
+    $f .= " " . renderNormal($ref->{year}) if(defined($ref->{year}));
+    $f =~ s/^\s//;
+    $t .= "<date>$f</date>\n" if(defined($f));
+
+    # switch on the types we can handle
+    if($type eq "techreport")
+    {
+	# technical report
+	if(defined($ref->{institution})) {
+	    $t .= "<orgname> " . renderNormal($ref->{institution}) . "</orgname>\n";
+	}
+	if(defined($ref->{number})) {
+	    $t .= "<volumenum>" . renderNormal($ref->{number}) . "</volumenum>\n";
+	}
+    }
+    elsif(($type eq "phdthesis") || ($type eq "mastersthesis"))
+    {
+	# doctoral thesis
+	if(defined($ref->{school}))
+	{ $t .= "<orgname>" . renderNormal($ref->{school}) . "</orgname>\n"; }
+    }
+    elsif(($type eq "inproceedings") || ($type eq "incollection"))
+    {
+	# paper in proceedings or other collection
+	$t .= "<pagenums>" . renderNormal($ref->{pages}) . "</pagenums>\n" if(defined($ref->{pages}));
+	$f .= "<title>" . renderNormal($ref->{booktitle}) . "</title>\n";
+	$f .= $es if(defined($es));
+	if(defined($ref->{series}))
+	{ $f .= "<seriestitle>" . renderNormal($ref->{series}) . "</seriestitle>\n"; }
+	if(defined($ref->{volume})) 
+	{ $f .= "<volumenum>" . renderNormal($ref->{volume}) . "</volumenum>\n"; }
+	$f .= "<publishername>" . renderNormal($ref->{publisher}) . "</publishername>\n" if(defined($ref->{publisher}));
+	$t .= "<seriesinfo>\n$f</seriesinfo>\n";
+    }
+    elsif($type eq "article")
+    {
+	# paper in journal
+	if(defined($ref->{volume}))
+	{
+	    if(defined($ref->{number}))
+	    { $t .= "<volumenum>" . renderNormal($ref->{volume}) . "(" . renderNormal($ref->{number}) . ")</volumenum>\n"; }
+	    else
+	    { $t .= "<volumenum>" . renderNormal($ref->{volume}) . "</volumenum>\n"; }
+	}
+	elsif(defined($ref->{number}))
+	{ $t = "<volumenum>" . renderNormal($ref->{number}) . "</volumenum>\n"; }
+	$t .= "<pagenums>" . renderNormal($ref->{pages}) , "</pagenums>\n" if(defined($ref->{pages}));
+	$t .= "<publishername>" . renderNormal($ref->{publisher}) . "</publishername>\n" if(defined($ref->{publisher}));
+    }
+    elsif(($type eq "book") || ($type eq "proceedings"))
+    {
+	# book or edited proceedings
+	$t .= $es if(defined($es));
+	if(defined($ref->{series}))
+	{ $t .= "<seriestitle>" . renderNormal($ref->{series}) . "</seriestitle>\n"; }
+	if(defined($ref->{volume})) 
+	{ $t .= "<volumenum>" . renderNormal($ref->{volume}) . "</volumenum>\n"; }
+	$t .= "<publishername>" . renderNormal($ref->{publisher}) . "</publishername>\n" if(defined($ref->{publisher}));
+    }
+    elsif($type =~ /^misc(ellaneous)?/)
+    {
+	# miscellaneous publication
+	$t .= "<annotation>" . renderNormal($ref->{howpublished}) . "</annotation>" if(defined($ref->{howpublished}));
+    }
+
+    else
+    {
+	# anything else is treated like unpublished material
+    }
+    
+    # miscellaneous end information
+    $t .= "<isbn>" . renderNormal($ref->{isbn}) . "</isbn>\n" if(defined($ref->{isbn}));
+    $t .= "<annotation>" . renderNormal($ref->{note}) . "</annotation>\n" if(defined($ref->{note}));
+
+    $t = detex($t);
+    return "<biblioentry xml:id=\"" . $ref->{key} . "\">\n$t</biblioentry>\n\n";
+}
+
+
+# Usage message
+sub usage
+{
+    print <<EOU;
+bib2x - convert a bibtex(1) bibliography into another format
+usage: bib2x [options] <bibfle>
+options:
+   -y         present in year order (default is sections)
+   -n         number references (wiki format only)
+   -t         produce "standalone" file with title etc
+   -x
+   --extras   add acceptance rates and contribution percentages
+   -k 'keyword,keyword,...'
+              include only those references whose authors,
+              titles or keywords match one of the keywords
+   --depth n  produce subsections that are n deep (1=subsection or
+              h2, etc)
+   --plain
+   --text     generate plain text (no mark-up)
+   --wiki     generate wiki text
+   --html     generate HTML markup
+   --bibtex   generate LaTeX nobibliography package output
+   --latex
+   --tex      generate LaTeX text
+   --docbook
+   --xml      generate DocBook-style reference database
+   --css stylefile
+              use <stylefile> as style file for HTML pages
+   --barebones
+   -B         minimise the HTML generated, no styling
+   --visiblekeys
+   -V         add BibTeX keys in square brackets
+   --base url
+   -b url     use <url> as the base for any object references in HTML
+   --nodoi    turn doi:// URLs into directly-resolvable http:// URLs
+EOU
+    exit 0;
+}
