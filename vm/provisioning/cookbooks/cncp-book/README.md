@@ -1,10 +1,13 @@
 # cncp-book-cookbook
 
-TODO: Enter the cookbook description here.
+Cookbook for building the VM needed to build "Complex networks,
+complex processes". This installs the necessary tools and then
+installs the sources for the book from the git repo. Slightly
+recursively, this will also install this cookbook.
 
 ## Supported Platforms
 
-TODO: List your supported platforms.
+Any Linux or other Unix.
 
 ## Attributes
 
@@ -16,10 +19,10 @@ TODO: List your supported platforms.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['cncp-book']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['cncp-book']['source-git']</tt></td>
+    <td>String</td>
+    <td>git repository for book sources</td>
+    <td>the master repo</td>
   </tr>
 </table>
 
@@ -39,4 +42,4 @@ Include `cncp-book` in your node's `run_list`:
 
 ## License and Authors
 
-Author:: YOUR_NAME (<YOUR_EMAIL>)
+Author:: Simon Dobson (<simon.dobson@computer.org>)

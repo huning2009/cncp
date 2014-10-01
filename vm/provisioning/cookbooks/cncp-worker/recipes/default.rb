@@ -6,5 +6,5 @@
 #
 
 include_recipe 'apt-get-update::default'
-include_recipe 'python-networkx::default'
+include_recipe 'python-networkx::default-headless'
 include_recipe 'cncp::default'

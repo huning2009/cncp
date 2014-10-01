@@ -6,7 +6,7 @@
 #
 
 # Minimal-ish desktop environment
-gnome = %w( gnome-shell gdm gnome-session gnome-screensaver gnome-control-center gnome-terminal ssh-askpass-gnome )
+gnome = %w( gnome-shell gdm gnome-panel libgnome2-bin gnome-session gnome-screensaver gnome-control-center gnome-terminal ssh-askpass-gnome )
 
 # Install Gnome desktop
 gnome.each do |p|
