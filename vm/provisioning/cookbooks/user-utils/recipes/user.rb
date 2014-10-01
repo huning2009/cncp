@@ -15,8 +15,8 @@ user node['user-utils']['username'] do
   supports :manage_home => true
 end
 
-# Lock-down user's home directory slightly more than normal
+# Lock-down user's home directory
 directory "/home/" + node['user-utils']['username'] do
-  mode "0700"
+  mode "0755"
 end
 

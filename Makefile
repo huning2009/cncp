@@ -25,11 +25,11 @@ IMAGES = cc-at-nc-sa.png \
 	konigsberg-bridges.png
 BIB = complex-networks.bib
 
-# Remote destination
+# Remote destinations
 # (assumes the necessary keys are already installed)
 REMOTE_USER = root
 REMOTE_HOST = away.simondobson.org
-REMOTE_DIR = /var/www/simondobson.org/complex-networks-complex-processes
+REMOTE_DIR = /var/www/simondobson.org/complex-networks-complex-processes/content
 
 # Timestamping
 TIMESTAMP = `date "+%Y-%m-%d %H:%M"`
@@ -44,8 +44,10 @@ SERVER = $(IPYTHON) notebook
 CONVERT = $(IPYTHON) nbconvert
 
 # Other tools
+PERL = perl
+PYTHON = python
 RSYNC = rsync -av
-BIB2X = bib2x --nodoi --visiblekeys
+BIB2X = $(PERL) ./bib2x --nodoi --visiblekeys
 PANDOC = pandoc
 PDFLATEX = pdflatex --interaction batchmode
 BIBTEX = bibtex
@@ -75,7 +77,7 @@ HTML_EXTRAS = \
 	$(HTML_PLUGINS) \
 	$(IMAGES) \
 	$(UPLOADED)
-WWW_POSTPROCESS = ./www-postprocess.py
+WWW_POSTPROCESS = $(PYTHON) ./www-postprocess.py
 
 # Zip'ped notebook output
 ZIP_FILE = complex-networks-complex-processes.zip
@@ -122,7 +124,7 @@ clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf
 # Populate the bibliography template notebook
 $(BIB_NOTEBOOK): $(BIB) $(BIB_HTML) $(BIB_NOTEBOOK_TEMPLATE)
 	$(SED) -e 's/"/\\"/g' -e 's/.*/"&"/g' <$(BIB_HTML) >tmp1.html
-	$(TAIL) +1 tmp1.html | ($(SED) -e 's/.*/&,/g' ; $(TAIL) -1 tmp1.html) >tmp2.html
+	$(TAIL) -n +1 tmp1.html | ($(SED) -e 's/.*/&,/g' ; $(TAIL) -n 1 tmp1.html) >tmp2.html
 	$(SED) -e '/%%BIBLIOGRAPHY%%/r tmp2.html' -e '/%%BIBLIOGRAPHY%%/d'  <$(BIB_NOTEBOOK_TEMPLATE) >$(BIB_NOTEBOOK)
 	$(RM) tmp1.html tmp2.html
 

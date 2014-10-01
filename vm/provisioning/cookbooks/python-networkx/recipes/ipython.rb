@@ -21,3 +21,9 @@ script "install-ipython" do
   EOH
 end
 
+# Supporting packages needed for converting IPython notebooks
+# to other formats
+package "python-pygments"
+package "python-jinja2"
+package "pandoc"
+

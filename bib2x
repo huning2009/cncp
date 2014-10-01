@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # bib2x -- convert a BibTeX bibliography into a wiki page, LaTeX bibliography etc
 # Copyright (c) 2006--2012, Simon Dobson <simon.dobson@computer.org>
