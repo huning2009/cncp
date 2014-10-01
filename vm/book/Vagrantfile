@@ -5,7 +5,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # config.vm.box = "hashicorp/precise32"
+  # Build in an Ubuntu environment
   config.vm.box = "ubuntu/trusty32"
   # config.vm.box_check_update = false
 
@@ -13,20 +13,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.ssh.forward_agent = true
 
   # Make VM appear on local network
-  config.vm.network "public_network"
+  #config.vm.network "public_network"
 
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
+  # Set up the VirtualBox provider
   config.vm.provider "virtualbox" do |vb|
-    # Don't boot with headless mode
+    # Give the VM a sensible name
+    vb.name = "complex-networks-complex-processes"
+
+    # Boot with a GUI
     vb.gui = true
 
-  #   # Use VBoxManage to customize the VM. For example to change memory:
-  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
+    # Need a bigger VM than the default
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  # Provision machine as network science worker
-  # using local Chef-Solo recipes
+  # Provision machine to build the book
   config.vm.provision "chef_solo" do |chef|
     chef.cookbooks_path = "../provisioning/cookbooks"
     chef.add_recipe "cncp-book"
