@@ -13,3 +13,8 @@ if node['vagrant']['plugins'].any?
   include_recipe "vagrant::install-plugins"
 end
 
+# Install any requested boxes
+if node['vagrant']['boxes'].any?
+  include_recipe "vagrant::install-boxes"
+end
+

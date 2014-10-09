@@ -46,8 +46,14 @@ package "zip"
 package "perl"
 package "python-bs4"
 
-# Un-comment and edit the following to install plugins to provision cloud-based VMs
+# Un-comment and edit the following to install plugins to provision cloud-based VMs,
+# which will involve some combination of plugins and base boxes
 node.override['vagrant']['plugins'] = %w( vagrant-azure vagrant-aws )
+node.override['vagrant']['boxes'] =
+  ({
+     'azure' => 'https://github.com/msopentech/vagrant-azure/raw/master/dummy.box',
+     'aws'   => 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'
+   })
 # ...then install vagrant and its plugins into the book's user
 node.override['vagrant']['username'] = node['cncp-book']['username']
 include_recipe "vagrant"

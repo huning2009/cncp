@@ -10,3 +10,6 @@ default['vagrant']['username'] = 'newuser'
 # List of plugins to install (defaults to none)
 default['vagrant']['plugins'] = %w( )
 
+# List of boxes to install (defaults to none)
+default['vagrant']['boxes'] = ({ })
+
