@@ -25,7 +25,7 @@ package "chef"
 package "curl"
 
 # Software needed to run the notebooks
-include_recipe "python-networkx::with-graphics"
+include_recipe "python::ipython"
 
 # Browser
 package "firefox"

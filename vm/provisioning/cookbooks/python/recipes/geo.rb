@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: python-networkx
-# Recipe:: mapping
+# Cookbook Name:: python
+# Recipe:: geo
 #
 # Copyright (C) 2014 Simon Dobson
 #

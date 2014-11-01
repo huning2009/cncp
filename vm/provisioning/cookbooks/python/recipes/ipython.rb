@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: python-networkx
+# Cookbook Name:: python
 # Recipe:: ipython
 #
 # Copyright (C) 2014 Simon Dobson
