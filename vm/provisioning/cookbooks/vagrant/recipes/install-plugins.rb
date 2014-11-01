@@ -5,8 +5,7 @@
 # Copyright (C) 2014 Simon Dobson
 #
 
-# Install vagrant
-package "vagrant"
+include_recipe "vagrant::vagrant"
 
 # Need the Ruby development tools as well (on Debian, anyway)
 package 'ruby-dev'

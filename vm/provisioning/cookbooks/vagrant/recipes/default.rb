@@ -5,15 +5,14 @@
 # Copyright (C) 2014 Simon Dobson
 #
 
-# Install vagrant
-package "vagrant"
+include_recipe "vagrant::vagrant"
 
-# Install any requested plugins
+# Install any requested plugins first
 if node['vagrant']['plugins'].any?
   include_recipe "vagrant::install-plugins"
 end
 
-# Install any requested boxes
+# ...then any requested base boxes
 if node['vagrant']['boxes'].any?
   include_recipe "vagrant::install-boxes"
 end

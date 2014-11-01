@@ -38,6 +38,12 @@ Install vagrant and any plugins and base boxes listed in the
 attributes. This is the only recipe that needs to be called
 directly: it will use the sub-recipes as required. 
 
+### vagrant::vagrant
+
+Install the basic vagrant system. At the moment this uses the distro's
+package: we may want to change this to grab the most up-to-date version
+from the web.
+ 
 ### vagrant::install-plugins
 
 Install any extra plugins. These should be listed in the ```plugins```

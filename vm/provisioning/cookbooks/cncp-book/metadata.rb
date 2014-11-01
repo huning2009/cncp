@@ -7,7 +7,7 @@ long_description 'Builds a VM that can build the book and all its examples from 
 version          '0.1.0'
 depends          'apt'
 depends          'user-utils'
-depends          'python-networkx'
+depends          'python'
 depends          'gnome'
 depends          'vagrant'
 

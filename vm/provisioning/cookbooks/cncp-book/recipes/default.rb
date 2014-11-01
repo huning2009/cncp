@@ -27,6 +27,13 @@ package "curl"
 # Software needed to run the notebooks
 include_recipe "python::ipython"
 
+# Software needed within the book
+include_recipe "python::scipy"
+include_recipe "python::pydata"
+include_recipe "python::networkx"
+include_recipe "python::graphics"
+include_recipe "python::geo"
+
 # Browser
 package "firefox"
 
