@@ -11,7 +11,8 @@ include_recipe "python::python"
 package "python-matplotlib"
 
 # seaborn, a more friendly graphical system built on matplotlib
-script "install-ipython" do
+include_recipe "python::scipy"
+script "install-seaborn" do
   interpreter "bash"
   code <<-EOH
   pip install --upgrade seaborn || (echo "Failed to install seaborn" ; exit 1)
