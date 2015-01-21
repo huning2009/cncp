@@ -9,21 +9,34 @@ NOTEBOOKS =  \
 	introduction.ipynb \
 	concepts.ipynb \
 	er-networks.ipynb \
+	percolation.ipynb \
+	simulate.ipynb \
 	powerlaw.ipynb \
 	generating-networks.ipynb \
 	spectral.ipynb \
 	epidemic-spreading.ipynb \
-	percolation.ipynb \
 	geodata.ipynb \
 	parallel.ipynb \
 	software.ipynb
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 
 # Additional source files
-IMAGES = cc-at-nc-sa.png \
+IMAGES = \
+	cc-at-nc-sa.png \
 	qr.png \
 	konigsberg-bridges.png
 BIB = complex-networks.bib
+
+# Python packages
+PY_COMPUTATIONAL = \
+	ipython \
+	numpy \
+	scipy \
+	networkx
+PY_INTERACTIVE = \
+	$(PY_COMPUTATIONAL) \
+	matplotlib \
+	seaborn
 
 # Remote destinations
 # (assumes the necessary keys are already installed)
@@ -40,19 +53,24 @@ UPLOADED = UPLOADED.txt
 
 # IPython functions
 IPYTHON = ipython
-SERVER = $(IPYTHON) notebook
+SERVER = $(IPYTHON) notebook --port 1626
 CONVERT = $(IPYTHON) nbconvert
 
 # Other tools
 PERL = perl
 PYTHON = python
+PIP = pip
+VIRTUALENV = virtualenv
+ACTIVATE = . bin/activate
 RSYNC = rsync -av
 BIB2X = $(PERL) ./bib2x --nodoi --visiblekeys
 PANDOC = pandoc
 PDFLATEX = pdflatex --interaction batchmode
 BIBTEX = bibtex
+MAKE = make
 RM = rm -fr
 MKDIR = mkdir -p
+CHDIR = cd
 CP = cp -r
 MV = mv
 SED = sed -E
@@ -104,19 +122,31 @@ PDF_EXTRAS = \
 	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
 	$(IMAGES)
 
+# Computational environments
+ENV_COMPUTATIONAL = cncp-compute
+ENV_INTERACTIVE = cncp
+ENV_REQUIREMENTS = requirements.txt
+
 
 # ----- Top-level targets -----
 
-# Build all the distributions
+# Build all the distributions of the book
 all: zip www pdf
 
 # Upload all versions of the book to web server
 upload: upload-zip upload-www upload-pdf
 
+# Build reproducible computational environments
+environments: env-computational env-interactive
+
 # Clean up the build
-clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf
+clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-environment
 	$(RM) $(HTML_NOTEBOOKS)
 	$(RM) $(NOTEBOOKS:.ipynb=_files) 
+
+# Run the notebook
+live:
+	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) ; $(SERVER) &
 
 
 # ----- Bibliography in a notebook -----
@@ -213,6 +243,23 @@ upload-pdf: pdf
 clean-pdf:
 	$(RM) $(PDF_NOTEBOOKS)
 	$(RM) $(PDF_BUILD)
+
+
+# ----- Computational environments -----
+
+# Computation-only software
+env-computational:
+	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
+	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && ($(foreach p, $(PY_COMPUTATIONAL), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
+
+# Interactive software
+env-interactive:
+	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
+	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && ($(foreach p, $(PY_INTERACTIVE), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
+
+# Clean-up the generated environments
+clean-environment:
+	$(RM) $(ENV_COMPUTATIONAL) $(ENV_INTERACTIVE)
 
 
 # ----- Construction rules -----
