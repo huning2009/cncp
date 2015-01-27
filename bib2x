@@ -22,7 +22,7 @@ use Carp;
 use Getopt::Long;
 use File::Basename;
 
-my ($bibfile, $yearOrder, $standalone, $numberReferences, $keywords, $format, $css, $extras, $nolinks, $nodoi, $visiblekeys, $barebones);
+my ($bibfile, $yearOrder, $standalone, $numberReferences, $keywords, $format, $css, $extras, $nolinks, $nodoi, $visiblekeys, $barebones, $alpha, $flatten);
 my $sectiondepth = 2; # subsection or h2
 my $citations = 0; # no limit to cut-off citations 
 my $objecturlbase = "/softcopy";
@@ -49,6 +49,8 @@ my $rc = GetOptions("y" => \$yearOrder,
 		    "base|b=s" => sub { shift;   $objecturlbase = shift; },
 		    "nodoi" => \$nodoi, 
 		    "css=s" => sub { shift;   $css = shift; },
+		    "s|sort" => \$alpha,
+		    "f|flat" => \$flatten,
 		    "x|extras" => \$extras,
     );
 $bibfile = shift;
@@ -102,9 +104,12 @@ sub parseBibfile
       }
       elsif($bib =~ m/^%%%\s*(.*?)\s*%%%\n(.*)$/s)
       {
-	  # bib2html title becomes sub-heading
-	  push @sections, $section;
-	  $section = [ $1 ];
+	  # only do sections if we're not flat
+	  if(!$flatten) {
+	      # bib2html title becomes sub-heading
+	      push @sections, $section;
+	      $section = [ $1 ];
+	  }
 	  $bib = $2;
       }
       elsif($bib =~ m/^%.*?\n(.*)$/s)
@@ -380,15 +385,24 @@ sub printByYear
 # Print a list of references
 sub printReferences
 {
-    my $l = shift;
+    my $refs = shift;
+    my @l = @$refs;
     my $ref;
 
+    # sort by tag if required
+    if($alpha) {
+	@l = sort { lc($a->{key}) cmp lc($b->{key}) } @l;
+    }
+
+    # start of list of we're numbering
     if($numberReferences) {
 	print renderStartOfList();
     }
-    while(scalar(@$l) > 0)
+
+    # render each reference
+    while(scalar(@l) > 0)
     {
-	$ref = shift @$l;
+	$ref = shift @l;
 	if($numberReferences) {
 	    print "<li>\n" if($format eq "html");
 	    print "\\item\n" if($format eq "tex");
@@ -401,6 +415,8 @@ sub printReferences
 	else
 	{ print renderPlain($ref) . "\n\n"; }
     }
+
+    # close list if we're numbering
     if($numberReferences) {
 	print renderEndOfList();
     }
@@ -905,30 +921,32 @@ options:
    -y         present in year order (default is sections)
    -n         number references (wiki format only)
    -t         produce "standalone" file with title etc
-   -x
-   --extras   add acceptance rates and contribution percentages
+   --css stylefile
+              use <stylefile> as style file for HTML pages
+   --barebones,-B
+              minimise the HTML generated, no styling
+   --visiblekeys, -V
+              add BibTeX keys in square brackets
+   -x, --extras
+              add acceptance rates and contribution percentages
    -k 'keyword,keyword,...'
               include only those references whose authors,
               titles or keywords match one of the keywords
+   --sort,-s   output references sorted by tag
+   --flat,-f  ignore sections when processing bibliography
    --depth n  produce subsections that are n deep (1=subsection or
               h2, etc)
-   --plain
-   --text     generate plain text (no mark-up)
+   --plain, --text
+              generate plain text (no mark-up)
    --wiki     generate wiki text
    --html     generate HTML markup
    --bibtex   generate LaTeX nobibliography package output
-   --latex
-   --tex      generate LaTeX text
-   --docbook
-   --xml      generate DocBook-style reference database
-   --css stylefile
-              use <stylefile> as style file for HTML pages
-   --barebones
-   -B         minimise the HTML generated, no styling
-   --visiblekeys
-   -V         add BibTeX keys in square brackets
-   --base url
-   -b url     use <url> as the base for any object references in HTML
+   --latex,--tex
+              generate LaTeX text
+   --docbook,--xml
+              generate DocBook-style reference database
+   --base url,-b url
+              use <url> as the base for any object references in HTML
    --nodoi    turn doi:// URLs into directly-resolvable http:// URLs
 EOU
     exit 0;
