@@ -30,13 +30,16 @@ BIB = complex-networks.bib
 # Python packages
 PY_COMPUTATIONAL = \
 	ipython \
+	pyzmq \
 	numpy \
 	scipy \
 	networkx
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
 	matplotlib \
-	seaborn
+	seaborn \
+	tornado \
+	jinja2
 
 # Remote destinations
 # (assumes the necessary keys are already installed)
@@ -63,7 +66,7 @@ PIP = pip
 VIRTUALENV = virtualenv
 ACTIVATE = . bin/activate
 RSYNC = rsync -av
-BIB2X = $(PERL) ./bib2x --nodoi --visiblekeys
+BIB2X = $(PERL) ./bib2x --nodoi --visiblekeys --flat --sort
 PANDOC = pandoc
 PDFLATEX = pdflatex --interaction batchmode
 BIBTEX = bibtex
@@ -145,8 +148,8 @@ clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-environment
 	$(RM) $(NOTEBOOKS:.ipynb=_files) 
 
 # Run the notebook
-live:
-	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) ; $(SERVER) &
+live: env-interactive
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE)) ; $(SERVER) &
 
 
 # ----- Bibliography in a notebook -----
@@ -248,14 +251,20 @@ clean-pdf:
 # ----- Computational environments -----
 
 # Computation-only software
-env-computational:
+env-computational: $(ENV_COMPUTATIONAL)
+
+# Interactive software
+env-interactive: $(ENV_INTERACTIVE)
+
+# Only re-build computational environment if the directory is missing
+$(ENV_COMPUTATIONAL):
 	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
 	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && ($(foreach p, $(PY_COMPUTATIONAL), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
 
-# Interactive software
-env-interactive:
-	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
-	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && ($(foreach p, $(PY_INTERACTIVE), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
+# Only re-build interactive environment if the directory is missing
+$(ENV_INTERACTIVE):
+	$(VIRTUALENV) $(ENV_INTERACTIVE)
+	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && ($(foreach p, $(PY_INTERACTIVE), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
 
 # Clean-up the generated environments
 clean-environment:
