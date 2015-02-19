@@ -24,7 +24,13 @@ BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 IMAGES = \
 	cc-at-nc-sa.png \
 	qr.png \
-	konigsberg-bridges.png
+	konigsberg-bridges.png \
+	ipython-parallelism.pdf \
+	ipython-parallelism.svg \
+	ipython-parallelism.png \
+	ipython-local-parallelism.pdf \
+	ipython-local-parallelism.svg \
+	ipython-local-parallelism.png
 BIB = complex-networks.bib
 
 # Python packages
@@ -138,6 +144,7 @@ all: zip www pdf
 
 # Upload all versions of the book to web server
 upload: upload-zip upload-www upload-pdf
+	make clean-uploaded
 
 # Build reproducible computational environments
 environments: env-computational env-interactive
