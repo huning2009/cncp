@@ -30,7 +30,16 @@ IMAGES = \
 	ipython-parallelism.png \
 	ipython-local-parallelism.pdf \
 	ipython-local-parallelism.svg \
-	ipython-local-parallelism.png
+	ipython-local-parallelism.png \
+	ipython-mechanics.pdf \
+	ipython-mechanics.svg \
+	ipython-mechanics.png \
+	disease-periods.pdf \
+	disease-periods.svg \
+	disease-periods.png \
+	disease-types.pdf \
+	disease-types.svg \
+	disease-types.png
 BIB = complex-networks.bib
 
 # Python packages
