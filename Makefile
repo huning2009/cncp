@@ -21,26 +21,23 @@ NOTEBOOKS =  \
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 
 # Additional source files
-IMAGES = \
+BIB = complex-networks.bib
+
+# Image files
+RAW_IMAGES = \
 	cc-at-nc-sa.png \
 	qr.png \
-	konigsberg-bridges.png \
+	konigsberg-bridges.png
+PDF_IMAGES = \
 	ipython-parallelism.pdf \
-	ipython-parallelism.svg \
-	ipython-parallelism.png \
 	ipython-local-parallelism.pdf \
-	ipython-local-parallelism.svg \
-	ipython-local-parallelism.png \
 	ipython-mechanics.pdf \
-	ipython-mechanics.svg \
-	ipython-mechanics.png \
 	disease-periods.pdf \
-	disease-periods.svg \
-	disease-periods.png \
-	disease-types.pdf \
-	disease-types.svg \
-	disease-types.png
-BIB = complex-networks.bib
+	disease-types.pdf
+IMAGES = \
+	$(RAW_IMAGES) \
+	$(PDF_IMAGES:.pdf=.svg) \
+	$(PDF_IMAGES:.pdf=.png)
 
 # Python packages
 PY_COMPUTATIONAL = \
@@ -48,12 +45,17 @@ PY_COMPUTATIONAL = \
 	pyzmq \
 	numpy \
 	scipy \
-	networkx
+	mpmath \
+	networkx \
+	dill
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
+	pandas \
 	matplotlib \
 	seaborn \
+	jsonschema \
 	tornado \
+	pygments \
 	jinja2
 
 # Remote destinations
@@ -165,7 +167,7 @@ clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-environment
 
 # Run the notebook
 live: env-interactive
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE)) ; $(SERVER) &
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(SERVER)) &
 
 
 # ----- Bibliography in a notebook -----
