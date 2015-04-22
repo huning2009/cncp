@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="774px" height="342px" viewBox="0 0 774 342" enable-background="new 0 0 774 342" xml:space="preserve">
+<circle fill="#EF4136" stroke="#000000" stroke-width="2" cx="405" cy="63" r="27"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="738" cy="135" r="27"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="666" cy="45" r="27"/>
+<g>
+	<g>
+		<line fill="none" stroke="#9B8579" stroke-width="2" x1="450" y1="54" x2="621" y2="45"/>
+		<path fill="#9B8579" d="M633.053,44.365c-5.562,2.403-12.409,6.364-16.57,10.395l2.935-9.677l-3.935-9.316
+			C620.044,39.339,627.271,42.56,633.053,44.365z"/>
+		<path fill="#9B8579" d="M437.946,54.635c5.561-2.403,12.409-6.364,16.57-10.395l-2.935,9.677l3.935,9.316
+			C450.955,59.661,443.729,56.44,437.946,54.635z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#9B8579" stroke-width="2" x1="450" y1="81" x2="693" y2="126"/>
+		<path fill="#9B8579" d="M704.868,128.197c-5.968,1.038-13.552,3.291-18.539,6.238l5.113-8.725l-1.65-9.977
+			C693.393,120.272,699.667,125.092,704.868,128.197z"/>
+		<path fill="#9B8579" d="M438.131,78.803c5.969-1.038,13.552-3.291,18.54-6.238l-5.114,8.725l1.65,9.977
+			C449.607,86.728,443.333,81.908,438.131,78.803z"/>
+	</g>
+</g>
+<circle fill="#00AEEF" stroke="#000000" stroke-width="2" cx="153" cy="63" r="27"/>
+<g>
+	<g>
+		<line fill="none" stroke="#9B8579" stroke-width="2" x1="198" y1="63" x2="360" y2="63"/>
+		<path fill="#9B8579" d="M372.07,63c-5.68,2.107-12.727,5.703-17.094,9.51l3.439-9.51l-3.439-9.51
+			C359.344,57.297,366.391,60.894,372.07,63z"/>
+		<path fill="#9B8579" d="M185.93,63c5.68-2.107,12.727-5.703,17.094-9.51L199.584,63l3.439,9.51
+			C198.656,68.704,191.609,65.107,185.93,63z"/>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 377.9995 26.9995)" font-family="'MyriadPro-Regular'" font-size="12">Controller</text>
+<text transform="matrix(1 0 0 1 710.9995 72)" font-family="'MyriadPro-Regular'" font-size="12">Engines</text>
+<text transform="matrix(1 0 0 1 125.9995 26.9995)" font-family="'MyriadPro-Regular'" font-size="12">Notebook</text>
+<rect x="117" y="99" fill="none" width="252" height="18"/>
+<text transform="matrix(1 0 0 1 116.9995 106.356)" font-family="'CourierNewPSMT'" font-size="12">rc = cluster.map(f, xrange(10))</text>
+<rect x="117" y="171" fill="none" width="153" height="54"/>
+<text transform="matrix(1 0 0 1 116.9995 178.356)"><tspan x="0" y="0" font-family="'CourierNewPSMT'" font-size="12">123-456-789 → (1, f)</tspan><tspan x="0" y="14.4" font-family="'CourierNewPSMT'" font-size="12">456-827-157 → (2, f)</tspan><tspan x="0" y="28.8" font-family="'CourierNewPSMT'" font-size="12">...</tspan></text>
+<rect x="369" y="171" fill="none" width="153" height="54"/>
+<text transform="matrix(1 0 0 1 368.9995 178.3564)"><tspan x="0" y="0" font-family="'CourierNewPSMT'" font-size="12">123-456-789 → </tspan><tspan x="0" y="14.4" font-family="'CourierNewPSMT'" font-size="12">456-827-157 → </tspan><tspan x="0" y="28.8" font-family="'CourierNewPSMT'" font-size="12">...</tspan></text>
+<rect x="648" y="81" fill="none" width="72" height="18"/>
+<text transform="matrix(1 0 0 1 647.9995 88.356)" font-family="'CourierNewPSMT'" font-size="12">f(1)</text>
+<rect x="729" y="171" fill="none" width="72" height="18"/>
+<text transform="matrix(1 0 0 1 728.9995 178.356)" font-family="'CourierNewPSMT'" font-size="12">f(2)</text>
+<rect x="549" y="198" fill="none" width="72" height="18"/>
+<text transform="matrix(1 0 0 1 548.9995 205.3564)" font-family="'CourierNewPSMT'" font-size="12">42</text>
+<rect x="279" y="243" fill="none" width="54" height="45"/>
+<text transform="matrix(1 0 0 1 278.9995 250.3555)"><tspan x="0" y="0" font-family="'CourierNewPSMT'" font-size="12">25</tspan><tspan x="0" y="14.4" font-family="'CourierNewPSMT'" font-size="12">42</tspan><tspan x="0" y="28.801" font-family="'CourierNewPSMT'" font-size="12">...</tspan></text>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" x1="153" y1="117" x2="153" y2="153"/>
+		<path d="M153,165.07c-2.107-5.68-5.703-12.727-9.51-17.094l9.51,3.439l9.51-3.439C158.703,152.343,155.106,159.39,153,165.07z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" x1="261" y1="180" x2="342" y2="180"/>
+		<path d="M354.07,180c-5.68,2.107-12.727,5.703-17.094,9.51l3.439-9.51l-3.439-9.51C341.343,174.297,348.39,177.894,354.07,180z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" x1="477" y1="180" x2="531" y2="117"/>
+		<path d="M538.855,107.835c-2.097,5.684-3.952,13.375-3.904,19.167l-4.982-8.8l-9.458-3.577
+			C526.243,113.786,533.559,110.776,538.855,107.835z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" x1="477" y1="180" x2="648" y2="153"/>
+		<path d="M659.922,151.117c-5.282,2.967-11.682,7.618-15.401,12.059l1.914-9.93l-4.881-8.857
+			C646.461,147.469,653.984,149.922,659.922,151.117z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" d="M729,189c0,0-9,27-72,36s-81-9-81-9"/>
+		<path d="M567.464,207.465c5.507,2.526,13.032,4.967,18.812,5.363l-9.156,4.292l-4.292,9.156
+			C572.431,220.497,569.992,212.971,567.464,207.465z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" d="M414,207c0,0,0,27-18,45s-81,9-81,9"/>
+		<path d="M303.05,259.293c5.921-1.283,13.405-3.846,18.267-6.997l-4.75,8.928l2.06,9.901
+			C314.843,266.738,308.375,262.182,303.05,259.293z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" d="M270,261c0,0-126,0-153-18s-45-99-45-99s-9-36,0-54s36-27,36-27"/>
+		<path d="M119.451,59.183c-4.722,3.795-10.271,9.435-13.21,14.427l0.256-10.109l-6.27-7.935
+			C105.574,57.797,113.396,58.981,119.451,59.183z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" d="M549,207c0,0-27,36-54,27s-27-18-27-18"/>
+		<path d="M468,203.93c2.107,5.68,5.703,12.727,9.51,17.094l-9.51-3.439l-9.51,3.439C462.296,216.656,465.893,209.609,468,203.93z"
+			/>
+	</g>
+</g>
+<rect x="170.359" y="126" fill="none" width="162.641" height="27"/>
+<text transform="matrix(1 0 0 1 170.3589 134.5195)"><tspan x="0" y="0" font-family="'MyriadPro-It'" font-size="12">Map operation gives rise to a set </tspan><tspan x="0" y="14.4" font-family="'MyriadPro-It'" font-size="12">of jobs identified by message id</tspan></text>
+<rect x="350.359" y="108" fill="none" width="135.641" height="54"/>
+<text transform="matrix(1 0 0 1 350.3589 116.5195)"><tspan x="0" y="0" font-family="'MyriadPro-It'" font-size="12">Jobs are sent to the cluster </tspan><tspan x="0" y="14.4" font-family="'MyriadPro-It'" font-size="12">controller which distributes </tspan><tspan x="0" y="28.801" font-family="'MyriadPro-It'" font-size="12">them to engines and waits </tspan><tspan x="0" y="43.2" font-family="'MyriadPro-It'" font-size="12">for results</tspan></text>
+<rect x="449.358" y="243" fill="none" width="189.641" height="45"/>
+<text transform="matrix(1 0 0 1 449.3584 251.5195)"><tspan x="0" y="0" font-family="'MyriadPro-It'" font-size="12">As results come in they are recorded </tspan><tspan x="0" y="14.4" font-family="'MyriadPro-It'" font-size="12">against the corresponding message id</tspan></text>
+<rect x="9" y="252" fill="none" width="117.641" height="54"/>
+<text transform="matrix(1 0 0 1 8.9995 260.5195)"><tspan x="0" y="0" font-family="'MyriadPro-It'" font-size="12">Completed results are </tspan><tspan x="0" y="14.4" font-family="'MyriadPro-It'" font-size="12">shipped back the the </tspan><tspan x="0" y="28.801" font-family="'MyriadPro-It'" font-size="12">client and returned to </tspan><tspan x="0" y="43.2" font-family="'MyriadPro-It'" font-size="12">the blocked caller</tspan></text>
+</svg>
