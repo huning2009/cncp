@@ -48,12 +48,10 @@ div.rendered_html div.figure span.caption {
 
 div.rendered_html code {
     font-style: Courier, monospace;
-    background-color: rgb(220, 220, 210);
     font-size: 12pt;
 }
 
 div.rendered_html pre {
-    background-color: rgb(220, 220, 210);
     font-size: 12pt;
 }
 
@@ -75,7 +73,7 @@ div.input_area > div.highlight {
 
 div.input_area > div.highlight > pre  {
     background-color: rgb(220, 220, 210);
-    font-size: 12pt;
+    font-size: 10pt;
 }
 
 
