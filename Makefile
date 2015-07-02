@@ -91,6 +91,7 @@ MAKE = make
 RM = rm -fr
 MKDIR = mkdir -p
 CHDIR = cd
+TR = tr
 CP = cp -r
 MV = mv
 SED = sed -E
@@ -142,13 +143,18 @@ PDF_EXTRAS = \
 	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
 	$(IMAGES)
 
-# Computational environments
+# Computational environments and requirements
 ENV_COMPUTATIONAL = cncp-compute
 ENV_INTERACTIVE = cncp
-ENV_REQUIREMENTS = requirements.txt
+REQ_COMPUTATIONAL = cncp-compute-requirements.txt
+REQ_INTERACTIVE = cncp-requirements.txt
 
 
 # ----- Top-level targets -----
+
+# Default prints a help message, since it's all a bit complicated
+help:
+	@make usage
 
 # Build all the distributions of the book
 all: zip www pdf
@@ -158,10 +164,13 @@ upload: upload-zip upload-www upload-pdf
 	make clean-uploaded
 
 # Build reproducible computational environments
-environments: env-computational env-interactive
+env: env-computational env-interactive
+
+# Update the dependencies for the computational environments
+update: clean-env newenv-computational newenv-interactive
 
 # Clean up the build
-clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-environment
+clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-env
 	$(RM) $(HTML_NOTEBOOKS)
 	$(RM) $(NOTEBOOKS:.ipynb=_files) 
 
@@ -271,21 +280,33 @@ clean-pdf:
 # Computation-only software
 env-computational: $(ENV_COMPUTATIONAL)
 
+newenv-computational:
+	echo $(PY_COMPUTATIONAL) | $(TR) ' ' '\n' >$(REQ_COMPUTATIONAL)
+	make env-computational
+	$(CP) $(ENV_COMPUTATIONAL)/requirements.txt $(REQ_COMPUTATIONAL)
+
 # Interactive software
 env-interactive: $(ENV_INTERACTIVE)
+
+newenv-interactive:
+	echo $(PY_INTERACTIVE) | $(TR) ' ' '\n' >$(REQ_INTERACTIVE)
+	make env-interactive
+	$(CP) $(ENV_INTERACTIVE)/requirements.txt $(REQ_INTERACTIVE)
 
 # Only re-build computational environment if the directory is missing
 $(ENV_COMPUTATIONAL):
 	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
-	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && ($(foreach p, $(PY_COMPUTATIONAL), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
+	$(CP) $(REQ_COMPUTATIONAL) $(ENV_COMPUTATIONAL)/requirements.txt
+	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
 
 # Only re-build interactive environment if the directory is missing
 $(ENV_INTERACTIVE):
 	$(VIRTUALENV) $(ENV_INTERACTIVE)
-	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && ($(foreach p, $(PY_INTERACTIVE), $(PIP) install $(p);)) && $(PIP) freeze >$(ENV_REQUIREMENTS)
+	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
+	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
 
 # Clean-up the generated environments
-clean-environment:
+clean-env:
 	$(RM) $(ENV_COMPUTATIONAL) $(ENV_INTERACTIVE)
 
 
@@ -308,3 +329,28 @@ clean-environment:
 .bib.tex:
 	$(BIB2X) --latex $(BIB) >$(BIB_TEX)
 
+
+# ----- Usage -----
+
+define HELP_MESSAGE
+Building the book:
+   make all     build all versions
+   make www     build the HTML version only
+   make pdf     build the PDF version only
+   make zip     zip-up the version
+
+Publishing:
+   make upload  upload all version to web site (needs the keys)
+
+Maintenance:
+   make clean   clean-up for a clean build
+
+Running the code:
+   make env     build virtualenvs using repo requirements.txt
+   make update  update requirements.txt and build virtualenvs
+   make live    run notebook in interactive virtualenv
+endef
+export HELP_MESSAGE
+
+usage:
+	@echo "$$HELP_MESSAGE"
