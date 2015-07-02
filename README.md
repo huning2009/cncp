@@ -10,7 +10,7 @@ ideas and technologies.
 
 If you just want to read the book, it can be found here:
 
-http://www.simondobson.org/research.complex-networks-complex-processes/
+http://www.simondobson.org/complex-networks-complex-processes/
 
 At present the book is very much a work in progress, but I'd be
 delighted to receive any comments from anyone who's interested in
