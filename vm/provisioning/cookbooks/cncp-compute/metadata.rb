@@ -1,0 +1,11 @@
+name             'cncp-compute'
+maintainer       'Simon Dobson'
+maintainer_email 'simon.dobson@computer.org'
+license          'CC-BY-NC-SA-3.0'
+description      'Network science compute server'
+long_description 'Installs the software needed to perform network simulations'
+version          '0.4.0'
+depends          'apt'
+depends          'user-utils'
+depends          'python'
+
