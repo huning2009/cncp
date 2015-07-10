@@ -1,8 +1,8 @@
 name             'python'
 maintainer       'Simon Dobson'
 maintainer_email 'simon.dobson@computer.org'
-license          'GPL v3'
-description      'Installs Python'
-long_description 'Installs Python, its scientific, interactive, and graphical extensions'
-version          '0.2.0'
+license          'CC-BY-NC-SA-3.0'
+description      'Python'
+long_description 'Installs Python and virtual environments'
+version          '0.3.0'
 
