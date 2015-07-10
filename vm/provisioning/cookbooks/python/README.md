@@ -30,8 +30,7 @@ so common it seems silly not to take them by default.)
 
 Install the virtual environment ("virtualenv") tools, used to create isolated
 environments with known configurations. These can be populated using requirements.txt
-files specifying the package versions needed (see the ```python::install-virtualenv```
-resource).
+files specifying the package versions needed (see the ```python_virtualenv``` resource).
 
 
 ## Resources
@@ -44,6 +43,17 @@ Create and populate a virtualenv. This resource has the following attributes:
 * ```requirements```: URL of the requirmenets.txt file describing the packages
 * ```user```: user to install the virtualenv for (defaults to "vagrant")
 * ```dir```: directory to place the virtualenv in (defaults to "/home/vagrant") 
+
+For example:
+
+```
+python_virtualenv "test" do
+  virtualenv "test"     # defaults to the resource name
+  user "test"
+  dir "/home/test"
+  requirements "http://www.test.com/requirements.txt"
+end
+'''
 
 
 ## License and Authors
