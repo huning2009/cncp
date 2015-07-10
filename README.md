@@ -50,4 +50,9 @@ vm/ directory has the details.
 --
 -- Simon
 
-St Andrews, 10 July 2015.
+Professor Simon Dobson
+
+simon.dobson@computer.org
+http://www.simondobson.org
+
+St Andrews, UK. 10 July 2015.
