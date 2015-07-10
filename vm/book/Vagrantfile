@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.ssh.forward_agent = true
 
   # Make VM appear on local network
-  #config.vm.network "public_network"
+  config.vm.network "public_network"
 
   # Set up the VirtualBox provider
   config.vm.provider "virtualbox" do |vb|
@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.gui = true
 
     # Need a bigger VM than the default
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
   end
 
   # Provision machine to build the book
