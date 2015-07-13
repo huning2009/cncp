@@ -22,6 +22,9 @@ include_recipe 'apt::update'
 include_recipe "python::python"
 include_recipe "python::virtualenv"
 
+# Generally a good idea
+package "pkg-config"
+
 # Install libncurses development package (needed for IPython: see
 # https://stackoverflow.com/questions/22892482/error-installing-gnureadline-via-pip)
 package "libncurses5-dev"
