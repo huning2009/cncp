@@ -1,4 +1,5 @@
 backports.ssl-match-hostname==3.4.0.2
+beautifulsoup4==4.4.0
 certifi==2015.4.28
 decorator==3.4.2
 dill==0.2.3
@@ -9,6 +10,7 @@ Jinja2==2.7.3
 jsonschema==2.5.1
 MarkupSafe==0.23
 matplotlib==1.4.3
+mistune==0.6
 mock==1.0.1
 mpmath==0.19
 networkx==1.9.1
