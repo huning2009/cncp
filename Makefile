@@ -63,7 +63,9 @@ PY_INTERACTIVE = \
 	jsonschema \
 	tornado \
 	pygments \
-	jinja2
+	jinja2 \
+	beautifulsoup4 \
+	mistune
 
 # Remote destinations
 # (assumes the necessary keys are already installed)
@@ -121,8 +123,7 @@ HTML_FILES = $(HTML_NOTEBOOKS)
 HTML_EXTRAS = \
 	$(HTML_STYLESHEET) \
 	$(HTML_PLUGINS) \
-	$(IMAGES) \
-	$(UPLOADED)
+	$(IMAGES)
 WWW_POSTPROCESS = $(PYTHON) ./www-postprocess.py
 
 # Zip'ped notebook output
@@ -218,9 +219,10 @@ zip: $(ZIP_FILES)
 	$(ZIP) $(ZIP_FILE) $(ZIP_FILES)
 
 # Upload ZIP file of notebooks
-upload-zip: zip
+upload-zip: zip $(UPLOADED)
 	$(RSYNC) \
 	$(ZIP_FILE) \
+	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
 
 # Clean up the ZIP'ped notebooks
@@ -240,13 +242,14 @@ www: gen-www
 	$(CP) $(HTML_EXTRAS) $(HTML_BUILD)
 
 # Upload HTML version of book
-upload-www: www
+upload-www: www $(UPLOADED)
 	cd $(HTML_BUILD) && \
 	$(RSYNC) \
 	$(UPLOADED) \
 	$(HTML_FILES) $(HTML_EXTRAS) \
 	$(EXTRA_FILES) \
 	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
+	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
 
 # Clean up the HTML book
@@ -270,10 +273,11 @@ pdf: gen-pdf
 	exit 0
 
 # Upload PDF version of book
-upload-pdf: pdf
+upload-pdf: pdf $(UPLOADED)
 	cd $(PDF_BUILD) && \
 	$(RSYNC) \
 	$(PDF) \
+	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
 
 # Clean up the PDF build
@@ -322,10 +326,10 @@ clean-env:
 .SUFFIXES: .ipynb .bib .html .tex .md
 
 .ipynb.html:
-	$(CONVERT) --to html $(HTML_OPTIONS) $<
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(CONVERT) --to html $(HTML_OPTIONS) $<)
 
 .ipynb.tex:
-	$(CONVERT) --to latex $(PDF_OPTIONS) $<
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(CONVERT) --to latex $(PDF_OPTIONS) $<)
 
 .ipynb.md:
 	$(CONVERT) --to markdown $<
