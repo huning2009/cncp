@@ -236,9 +236,9 @@ clean-zip:
 gen-www: $(HTML_FILES)
 
 # Build HTML (web) versions of notebooks
-www: gen-www
+www: env-interactive gen-www
 	$(MKDIR) $(HTML_BUILD)
-	$(foreach fn, $(HTML_NOTEBOOKS), $(WWW_POSTPROCESS) $(fn) $(HTML_BUILD);)
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(foreach fn, $(HTML_NOTEBOOKS), $(WWW_POSTPROCESS) $(fn) $(HTML_BUILD);))
 	$(CP) $(HTML_EXTRAS) $(HTML_BUILD)
 
 # Upload HTML version of book
@@ -266,7 +266,7 @@ gen-pdf: $(PDF_FILES) $(UPLOADED)
 	$(CP) $(PDF_FILES) $(PDF_EXTRAS) $(PDF_BUILD)
 
 # Generate PDF file via LaTeX
-pdf: gen-pdf
+pdf: env-interactive gen-pdf
 	cd $(PDF_BUILD) && \
 	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
 	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
@@ -297,7 +297,7 @@ newenv-computational:
 	$(CP) $(ENV_COMPUTATIONAL)/requirements.txt $(REQ_COMPUTATIONAL)
 
 # Interactive software
-env-interactive: $(ENV_INTERACTIVE)
+env-interactive: $(ENV_INTERACTIVE) mathjax
 
 newenv-interactive:
 	echo $(PY_INTERACTIVE) | $(TR) ' ' '\n' >$(REQ_INTERACTIVE)
@@ -315,6 +315,19 @@ $(ENV_INTERACTIVE):
 	$(VIRTUALENV) $(ENV_INTERACTIVE)
 	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
 	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
+
+# Install a local copy of MathJax so notebooks can work without a network connection
+define PY_INSTALL_MATHJAX
+import IPython
+from IPython.external import mathjax
+
+mathjax.install_mathjax()
+endef
+export PY_INSTALL_MATHJAX
+
+mathjax:
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(IPYTHON) -c "$$PY_INSTALL_MATHJAX")
+
 
 # Clean-up the generated environments
 clean-env:
