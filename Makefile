@@ -297,7 +297,7 @@ newenv-computational:
 	$(CP) $(ENV_COMPUTATIONAL)/requirements.txt $(REQ_COMPUTATIONAL)
 
 # Interactive software
-env-interactive: $(ENV_INTERACTIVE) mathjax
+env-interactive: $(ENV_INTERACTIVE)
 
 newenv-interactive:
 	echo $(PY_INTERACTIVE) | $(TR) ' ' '\n' >$(REQ_INTERACTIVE)
@@ -315,6 +315,7 @@ $(ENV_INTERACTIVE):
 	$(VIRTUALENV) $(ENV_INTERACTIVE)
 	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
 	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
+	@make mathjax
 
 # Install a local copy of MathJax so notebooks can work without a network connection
 define PY_INSTALL_MATHJAX
