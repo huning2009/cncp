@@ -65,7 +65,8 @@ PY_INTERACTIVE = \
 	pygments \
 	jinja2 \
 	beautifulsoup4 \
-	mistune
+	mistune \
+	pexpect
 
 # Remote destinations
 # (assumes the necessary keys are already installed)
