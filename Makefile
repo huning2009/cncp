@@ -57,6 +57,7 @@ PY_COMPUTATIONAL = \
 	dill
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
+	jupyter \
 	pandas \
 	matplotlib \
 	seaborn \
@@ -81,10 +82,11 @@ UPLOADED = UPLOADED.txt
 
 # ----- Commands and options -----
 
-# IPython functions
+# IPython and notebook functions
 IPYTHON = ipython
-SERVER = $(IPYTHON) notebook --port 1626
-CONVERT = $(IPYTHON) nbconvert
+JUPYTER = jupyter
+SERVER = $(JUPYTER) notebook --port 1626
+CONVERT = $(JUPYTER) nbconvert
 
 # Other tools
 PERL = perl
@@ -225,6 +227,7 @@ upload-zip: zip $(UPLOADED)
 	$(ZIP_FILE) \
 	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
+	@make clean-uploaded
 
 # Clean up the ZIP'ped notebooks
 clean-zip:
@@ -252,6 +255,7 @@ upload-www: www $(UPLOADED)
 	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
 	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
+	@make clean-uploaded
 
 # Clean up the HTML book
 clean-www:
@@ -280,6 +284,7 @@ upload-pdf: pdf $(UPLOADED)
 	$(PDF) \
 	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
+	@make clean-uploaded
 
 # Clean up the PDF build
 clean-pdf:
