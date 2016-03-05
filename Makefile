@@ -1,6 +1,6 @@
 # Makefile for "Complex networks, complex processes"
 #
-# Copyright (C) 2014-2015 Simon Dobson
+# Copyright (C) 2014-2016 Simon Dobson
 # 
 # Licensed under the Creative Commons Attribution-Noncommercial-Share
 # Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
@@ -46,10 +46,11 @@ IMAGES = \
 	$(PDF_IMAGES:.pdf=.svg) \
 	$(PDF_IMAGES:.pdf=.png)
 
-# Python packages
+# Python packages in computational environments
 PY_COMPUTATIONAL = \
 	ipython \
 	pyzmq \
+	ipyparallel \
 	numpy \
 	scipy \
 	mpmath \
@@ -65,9 +66,15 @@ PY_INTERACTIVE = \
 	tornado \
 	pygments \
 	jinja2 \
+	folium \
 	beautifulsoup4 \
 	mistune \
 	pexpect
+
+# Packages that shouldn't be saved as requirements (because they're
+# OS-specific, in this case OS X, and screw up Linux compute servers)
+PY_NON_REQUIREMENTS = \
+	appnope
 
 # Remote destinations
 # (assumes the necessary keys are already installed)
@@ -159,6 +166,7 @@ ENV_COMPUTATIONAL = cncp-compute
 ENV_INTERACTIVE = cncp
 REQ_COMPUTATIONAL = cncp-compute-requirements.txt
 REQ_INTERACTIVE = cncp-requirements.txt
+NON_REQUIREMENTS = $(SED) $(patsubst %, -e '/^%*/d', $(PY_NON_REQUIREMENTS))
 
 
 # ----- Top-level targets -----
@@ -300,7 +308,7 @@ env-computational: $(ENV_COMPUTATIONAL)
 newenv-computational:
 	echo $(PY_COMPUTATIONAL) | $(TR) ' ' '\n' >$(REQ_COMPUTATIONAL)
 	make env-computational
-	$(CP) $(ENV_COMPUTATIONAL)/requirements.txt $(REQ_COMPUTATIONAL)
+	$(NON_REQUIREMENTS) $(ENV_COMPUTATIONAL)/requirements.txt >$(REQ_COMPUTATIONAL)
 
 # Interactive software
 env-interactive: $(ENV_INTERACTIVE)
@@ -308,7 +316,7 @@ env-interactive: $(ENV_INTERACTIVE)
 newenv-interactive:
 	echo $(PY_INTERACTIVE) | $(TR) ' ' '\n' >$(REQ_INTERACTIVE)
 	make env-interactive
-	$(CP) $(ENV_INTERACTIVE)/requirements.txt $(REQ_INTERACTIVE)
+	$(NON_REQUIREMENTS) $(ENV_INTERACTIVE)/requirements.txt >$(REQ_INTERACTIVE)
 
 # Only re-build computational environment if the directory is missing
 $(ENV_COMPUTATIONAL):
