@@ -1,0 +1,43 @@
+Virtual machines and provisioning
+=================================
+
+This directory contains the code needed to create various virtual (and
+real) machine installations that can be used to perform the
+calculations described in "Complex networks, complex processes". The
+idea is to provide a common, stable computational environment to
+improve confidence and repeatability of simulations and other
+calculations. To this end we adopt a "devops" approach that treats
+computational infrastructure management as part of the source code
+repository. (See https://en.wikipedia.org/wiki/DevOps for a discussion
+of devops.)
+
+
+Virtual and real machines
+-------------------------
+
+The directories in this hierarchy contain code to create and provision
+various different virtual machines, and to provision a physical
+machine:
+
+book/		a Linux VM that can re-create the book itself
+compute/	a compute VM suitable for running remote simulations
+baremetal/	scripts to provision a physical machine as a compute node 
+
+These machines are all guided by Python requirements files stored in
+the repository and re-used to create the same computational
+environment whenever the system is installed.
+
+We use vagrant to control the creation and tear-down of virtual
+machines, wrapped-up in Makefiles for simplicity. See
+https://www.vagrantup.com/ for an explanation of vagrant.
+ 
+
+Provisioning
+------------
+
+We use chef to provision machines for various purposes. A set of chef
+recipes and resources describes the elements needed to install the
+software in support of the main Python-based elements needed for the
+book. See https://www.chef.io/chef/ for details of chef.
+
+
