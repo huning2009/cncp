@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cncp-compute
-# Recipe:: bare-metal
+# Recipe:: baremetal
 #
 # Copyright (C) 2016 Simon Dobson
 # 

@@ -12,4 +12,12 @@
 package "python"
 
 # Build tools
-package "python-dev"
+package "install_python_build_tools" do
+  case node[:platform]
+  when 'ubuntu', 'debian'
+    package_name "python-dev"
+  else
+    package_name "python-devel"
+  end
+end
+
