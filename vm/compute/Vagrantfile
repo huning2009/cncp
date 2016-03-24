@@ -14,28 +14,25 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "ubuntu/trusty32"
-  # config.vm.box_check_update = false
 
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-  # config.ssh.forward_agent = true
-
-  # Make VM appear on local network
-  config.vm.network "public_network"
-
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
+  # VirtualBox (default) edition
   config.vm.provider "virtualbox" do |vb|
+    config.vm.box = "ubuntu/trusty32"
+    # config.vm.box_check_update = false
+
+    # Make VM appear on local network
+    config.vm.network "public_network"
+
     # Give the VM a sensible name
     vb.name = "complex-networks-complex-processes-compute"
 
     # Add more memory for compute nodes
     vb.customize ["modifyvm", :id, "--memory", "4096"]
-  end
 
-  # Provision machine as a network science compute node
-  config.vm.provision "chef_solo" do |chef|
-    chef.cookbooks_path = "../provisioning/cookbooks"
-    chef.add_recipe "cncp-compute"
+    # Provision machine as a network science compute node
+    config.vm.provision "chef_solo" do |chef|
+      chef.cookbooks_path = "../provisioning/cookbooks"
+      chef.add_recipe "cncp-compute::vm"
+    end
   end
 end

@@ -12,9 +12,15 @@ require 'open-uri'
 
 use_inline_resources
 
+
+# Helper routine to work out the directory the virtualenv is in
+def virtualenv_dir
+  return ::File.join(node[:python][:dir], new_resource.virtualenv)
+end
+ 
 # Create a named virtualenv in a home directory, pulling requirements from the web
 action :create do
-  if ::File.exist?("#{new_resource.dir}/#{new_resource.virtualenv}")
+  if ::File.exist?("#{virtualenv_dir}")
     Chef::Log.info "Virtualenv #{new_resource.virtualenv} already exists"
   else
     converge_by("Create Python virtualenv #{new_resource.virtualenv}") do
@@ -24,12 +30,12 @@ action :create do
     end
   end
 end
-
+ 
 # Create the virtualenv
 def create_virtualenv
-  bash "create-virtualenv-#{new_resource.virtualenv}" do
-    cwd new_resource.dir
-    user new_resource.user
+  bash "create_virtualenv_#{new_resource.virtualenv}" do
+    cwd node[:python][:dir]
+    user node[:python][:user]
     code <<-EOF
 virtualenv #{new_resource.virtualenv}
 EOF
@@ -38,17 +44,17 @@ end
 
 # Copy in the requirements
 def create_requirements
-  file "#{new_resource.dir}/#{new_resource.virtualenv}/requirements.txt" do
-    owner new_resource.user
+  file "#{virtualenv_dir}/requirements.txt" do
+    owner node[:python][:user]
     content open(new_resource.requirements) { |io| io.read }
   end
 end
 
 # Install requirements into the virtualenv
 def install_requirements
-  bash "install-virtualenv-#{new_resource.virtualenv}" do
-    cwd "#{new_resource.dir}/#{new_resource.virtualenv}"
-    user new_resource.user
+  bash "install_virtualenv_#{new_resource.virtualenv}" do
+    cwd virtualenv_dir
+    user node[:python][:user]
     code <<-EOF
 . bin/activate
 pip install --requirement requirements.txt

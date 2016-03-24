@@ -2,14 +2,14 @@
 # Cookbook Name:: gnome
 # Recipe:: desktop
 #
-# Copyright (C) 2014 Simon Dobson
+# Copyright (C) 2015 Simon Dobson
+# 
+# Licensed under the Creative Commons Attribution-Noncommercial-Share
+# Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
 #
 
-# Minimal-ish desktop environment
-gnome = %w( gnome-shell gdm gnome-panel libgnome2-bin gnome-session gnome-screensaver gnome-control-center gnome-terminal ssh-askpass-gnome )
-
-# Install Gnome desktop
-gnome.each do |p|
+# Install Gnome desktop packages
+node['gnome']['desktop'].each do |p|
   package p
 end
 

@@ -3,9 +3,11 @@
 This cookbook installs vagrant into a VM, which then allows that VM to
 create more VMs. Recursive but sometimes useful.
 
+
 ## Supported Platforms
 
 Any Linux.
+
 
 ## Attributes
 
@@ -15,6 +17,18 @@ Any Linux.
     <th>Type</th>
     <th>Description</th>
     <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>['vagrant']['user']</tt></td>
+    <td>list of String</td>
+    <td>username of vagrant user</td>
+    <td>vagrant</td>
+  </tr>
+  <tr>
+    <td><tt>['vagrant']['dir']</tt></td>
+    <td>list of String</td>
+    <td>home directory of vagrant user</td>
+    <td>/home/vagrant</td>
   </tr>
   <tr>
     <td><tt>['vagrant']['plugins']</tt></td>
@@ -32,17 +46,11 @@ Any Linux.
 
 ## Usage
 
-### vagrant::default
+### vagrant::vagrant
 
 Install vagrant and any plugins and base boxes listed in the
 attributes. This is the only recipe that needs to be called
 directly: it will use the sub-recipes as required. 
-
-### vagrant::vagrant
-
-Install the basic vagrant system. At the moment this uses the distro's
-package: we may want to change this to grab the most up-to-date version
-from the web.
  
 ### vagrant::install-plugins
 
@@ -54,6 +62,10 @@ attribute as strings, for example ```vagrant-aws```.
 Install any base boxes. These should be listed in the ```boxes```
 hash as name/url pairs, for example ```'aws' => 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'```.
 
+
 ## License and Authors
 
 Author:: Simon Dobson (<simon.dobson@computer.org>)
+
+License:: Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported License
+          (https://creativecommons.org/licenses/by-nc-sa/3.0/).

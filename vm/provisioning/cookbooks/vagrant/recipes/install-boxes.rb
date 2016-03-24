@@ -2,10 +2,11 @@
 # Cookbook Name:: vagrant
 # Recipe:: install-boxes
 #
-# Copyright (C) 2014 Simon Dobson
+# Copyright (C) 2015 Simon Dobson
+# 
+# Licensed under the Creative Commons Attribution-Noncommercial-Share
+# Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
 #
-
-include_recipe "vagrant::vagrant"
 
 # Need the Ruby development tools as well (on Debian, anyway)
 package 'ruby-dev'
@@ -14,11 +15,10 @@ package 'ruby-dev'
 # so that the recipe remains idempotent
 # (Only checked against box names, not URLs.)
 node['vagrant']['boxes'].each do |name, url|
-  script "install-vagrant-box-#{name}" do
-    user node['vagrant']['username']
-    interpreter "bash"
-    environment ({ 'HOME' => "/home/#{node['vagrant']['username']}",
-                   'USER' => node['vagrant']['username'] })
+  bash "install-vagrant-box-#{name}" do
+    user node['vagrant']['user']
+    environment ({ 'HOME' => "#{node['vagrant']['dir']}",
+                   'USER' => node['vagrant']['user'] })
     code <<-EOH
 if (vagrant box list | egrep -q '^#{name}'); then
    echo "Box #{name} is already installed -- skipping"

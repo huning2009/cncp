@@ -5,7 +5,8 @@
 #
 
 # User who will be running vagrant
-default['vagrant']['username'] = 'newuser'
+default['vagrant']['user'] = 'vagrant'
+default['vagrant']['dir'] = '/home/vagrant'
 
 # List of plugins to install (defaults to none)
 default['vagrant']['plugins'] = %w( )

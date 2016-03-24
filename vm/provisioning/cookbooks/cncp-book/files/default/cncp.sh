@@ -4,8 +4,8 @@
 dconf write /org/gnome/desktop/screensaver/lock-enabled false
 
 # Run the IPython notebook server and open a browser
-(cd complex-networks-complex-processes && nohup ipython notebook &)
+(cd ~/complex-networks-complex-processes && make live)
 
 # Open the contents page in a tab
-sleep 2
-gnome-open http://localhost:8888/notebooks/complex-networks-complex-processes.ipynb &
+#sleep 2
+#gnome-open http://localhost:8888/notebooks/complex-networks-complex-processes.ipynb &

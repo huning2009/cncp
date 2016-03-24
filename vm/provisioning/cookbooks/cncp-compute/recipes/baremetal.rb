@@ -2,25 +2,23 @@
 # Cookbook Name:: cncp-compute
 # Recipe:: baremetal
 #
-# Copyright (C) 2016 Simon Dobson
+# Copyright (C) 2016 Simon Dobson <simon.dobson@computer.org>
 # 
 # Licensed under the Creative Commons Attribution-Noncommercial-Share
 # Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
 #
 
-# User, home directory, virtualenv and its requirements
-# (Easier to maintain them here than as attributes)
-cncp_user = "sd"
-cncp_user_home = "/home/#{cncp_user}"
-cncp_virtualenv = "cncp-compute"
-cncp_compute_requirements = "https://raw.githubusercontent.com/simoninireland/cncp/master/cncp-compute-requirements.txt"
+# ----- Python and necessary packages -----
 
-# Update the package structure
-#include_recipe 'apt::update'
+# Set up the right user etc
+node.override[:python][:user] = "sd"
+node.override[:python][:dir] = "/home/sd"
+node.override[:python][:virtualenv] = node[:cncp][:virtualenv]
+node.override[:python][:profile] = node[:cncp][:profile]
 
 # Install a minimal global Python and virtualenv support
 include_recipe "python::python"
-include_recipe "python::virtualenv"
+include_recipe "python::virtualenv-tools"
 
 # Generally a good idea
 #package "pkg-config"
@@ -34,33 +32,52 @@ package "ncurses-devel"
 package "lapack"
 package "lapack-devel"
 
+# SQLite for asynchronous parallel processing
+package "sqlite"
+
+
+# ----- Virtual environment -----
+
 # Install a virtualenv with a known-good set of packages, using the
-# version from the master github repo (annoyingly we can't copy from
-# the local file tree within chef).
-# 
-# If we're building a simple compute server the virtualenv stuff is a
-# bit redundant: we could just put it all globally.
-python_virtualenv "#{cncp_virtualenv}" do
-  user cncp_user
-  dir cncp_user_home
-  requirements cncp_compute_requirements
+# version from the master github repo
+python_virtualenv node[:cncp][:virtualenv] do
+  requirements node[:cncp][:requirements]
 end
 
+
+# ----- Compute engines -----
+
+# Create an IPython parallel profile for the IPython version installed in the virtualenv
+python_profile node[:cncp][:profile] do
+  virtualenv node[:cncp][:virtualenv]
+  parallel true
+  ssh_server node[:cncp][:ssh_server]
+end
+
+# Start compute engines in this profile and virtualenv
+python_compute "create_compute_engines" do
+  virtualenv node[:cncp][:virtualenv]
+  profile node[:cncp][:profile]
+end
+
+
+# ----- Login -----
+
 # Update .bashrc to drop the user straight into the virtualenv
-if ::File.exists?("#{cncp_user_home}/run_in_virtualenv.sh")
+if ::File.exists?("#{node[:cncp][:dir]}/run_in_virtualenv.sh")
   Chef::Log.info ".bashrc already updated (probably)"
 else
   # Create the activation script
-  file "#{cncp_user_home}/run_in_virtualenv.sh" do
-    owner cncp_user
-    content "cd #{cncp_user_home}/#{cncp_virtualenv} ; . bin/activate"
+  file "#{node[:cncp][:dir]}/run_in_virtualenv.sh" do
+    owner node[:cncp][:user]
+    content "cd #{node[:cncp][:dir]}/#{node[:cncp][:virtualenv]} ; . bin/activate"
   end
 
   # Source the activation script in .bashrc
   bash "update_bashrc" do
-    cwd cncp_user_home
+    cwd node[:cncp][:dir]
     code <<-EOF
-echo ". #{cncp_user_home}/run_in_virtualenv.sh" >>#{cncp_user_home}/.bashrc
+echo ". #{node[:cncp][:dir]}/run_in_virtualenv.sh" >>#{node[:cncp][:dir]}/.bashrc
 EOF
   end
 end

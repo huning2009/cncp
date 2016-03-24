@@ -1,12 +1,11 @@
 #
 # Cookbook Name:: cncp-book
 #
-# Copyright (C) 2014 Simon Dobson <simon.dobson@computer.org>
+# Copyright (C) 2015 Simon Dobson
+# 
+# Licensed under the Creative Commons Attribution-Noncommercial-Share
+# Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
 #
-
-# User for book
-default['cncp-book']['username'] = "cncp"
-default['cncp-book']['description'] = "Complex networks, complex processes"
 
 
 
