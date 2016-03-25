@@ -35,16 +35,17 @@ RAW_IMAGES = \
 	cc-at-nc-sa.png \
 	qr.png \
 	konigsberg-bridges.png
-PDF_IMAGES = \
-	ipython-parallelism.pdf \
-	ipython-local-parallelism.pdf \
-	ipython-mechanics.pdf \
-	disease-periods.pdf \
-	disease-types.pdf
+SVG_IMAGES = \
+	ipython-parallelism.svg \
+	ipython-local-parallelism.svg \
+	ipython-local-parallelism-one.svg \
+	ipython-mechanics.svg \
+	disease-periods.svg \
+	disease-types.svg
 IMAGES = \
 	$(RAW_IMAGES) \
-	$(PDF_IMAGES:.pdf=.svg) \
-	$(PDF_IMAGES:.pdf=.png)
+	$(SVG_IMAGES:.svg=.pdf) \
+	$(SVG_IMAGES:.svg=.png)
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
@@ -105,6 +106,7 @@ ACTIVATE = . bin/activate
 RSYNC = rsync -av
 BIB2X = $(PERL) ./bib2x --nodoi --visiblekeys --flat --sort
 PANDOC = pandoc
+INKSCAPE=inkscape
 PDFLATEX = pdflatex --interaction batchmode
 BIBTEX = bibtex
 MAKE = make
@@ -352,7 +354,7 @@ clean-env:
 
 # ----- Construction rules -----
 
-.SUFFIXES: .ipynb .bib .html .tex .md
+.SUFFIXES: .ipynb .bib .html .tex .md .svg .pdf .png
 
 .ipynb.html:
 	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(CONVERT) --to html $(HTML_OPTIONS) $<)
@@ -368,6 +370,9 @@ clean-env:
 
 .bib.tex:
 	$(BIB2X) --latex $(BIB) >$(BIB_TEX)
+
+.svg.pdf:
+	$(INKSCAPE) $*.svg --export-pdf=$*.pdf
 
 
 # ----- Usage -----
