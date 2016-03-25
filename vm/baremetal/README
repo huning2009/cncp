@@ -1,0 +1,22 @@
+Installing a compute server onto bare metal
+===========================================
+
+By "bare metal" we mean running compute servers on a login to a real
+machine. Actually the "real" machine may in fact be virtual, ut the
+point is that it's a machine to which you have a login already, as
+opposed to a virtual machine you're creating. (If you want to create a
+VM from scratch, you need to use the code in the vm/compute
+directory.)
+
+The baremetal.sh script is intended to get the provisioning system up
+and running, using the same set of chef recipes we use for VMs. To get
+things working:
+
+- Copy baremetal.sh to your home directory on the machine you want to
+  provision
+- Run the script using bash ./baremetal.sh
+
+That should be it. The script will clone a minimal version of the git
+repo containing only the provisioning code, and then use this to
+populate a Python virtual environment and spin-up some compute
+servers.

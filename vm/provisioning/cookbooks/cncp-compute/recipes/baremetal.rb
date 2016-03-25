@@ -10,10 +10,11 @@
 
 # ----- Python and necessary packages -----
 
-# Set up the right user etc
+# Acquire current user from attributes set in baremetal.sh
 node.override[:cncp][:user] = node['baremetal_user']
 node.override[:cncp][:dir] = node['baremetal_dir']
 
+# Set up the right user etc
 node.override[:python][:user] = node[:cncp][:user]
 node.override[:python][:dir] = node[:cncp][:dir]
 node.override[:python][:virtualenv] = node[:cncp][:virtualenv]
@@ -24,7 +25,7 @@ include_recipe "python::python"
 include_recipe "python::virtualenv-tools"
 
 # Generally a good idea
-#package "pkg-config"
+package "pkg-config"
 
 # Install libncurses development package (needed for IPython: see
 # https://stackoverflow.com/questions/22892482/error-installing-gnureadline-via-pip)
