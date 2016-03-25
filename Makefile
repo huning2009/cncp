@@ -23,6 +23,8 @@ NOTEBOOKS =  \
 	epidemic-spreading.ipynb \
 	geodata.ipynb \
 	parallel.ipynb \
+	parallel-ipython.ipynb \
+	parallel-simple.ipynb \
 	software.ipynb \
 	acknowledgements.ipynb
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
