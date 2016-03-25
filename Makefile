@@ -55,7 +55,8 @@ PY_COMPUTATIONAL = \
 	scipy \
 	mpmath \
 	networkx \
-	dill
+	dill \
+	paramiko
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
 	jupyter \

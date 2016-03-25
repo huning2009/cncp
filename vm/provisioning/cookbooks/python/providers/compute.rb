@@ -70,7 +70,7 @@ nohup ipcontroller --profile=#{new_resource.profile} --ipython-dir=#{ipython_dir
 
 REQCORES="#{engines}"
 CORES=${REQCORES:-`grep -c processor /proc/cpuinfo`}
-for i in {1..$CORES}; do
+for i in $(seq 1 $CORES); do
   nohup ipengine --profile=#{new_resource.profile} --ipython-dir=#{ipython_dir} &
 done
 EOF
