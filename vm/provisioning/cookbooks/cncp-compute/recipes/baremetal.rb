@@ -11,8 +11,11 @@
 # ----- Python and necessary packages -----
 
 # Set up the right user etc
-node.override[:python][:user] = "sd"
-node.override[:python][:dir] = "/home/sd"
+node.override[:cncp][:user] = node['baremetal_user']
+node.override[:cncp][:dir] = node['baremetal_dir']
+
+node.override[:python][:user] = node[:cncp][:user]
+node.override[:python][:dir] = node[:cncp][:dir]
 node.override[:python][:virtualenv] = node[:cncp][:virtualenv]
 node.override[:python][:profile] = node[:cncp][:profile]
 
