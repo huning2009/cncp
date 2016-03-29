@@ -25,6 +25,8 @@ NOTEBOOKS =  \
 	parallel.ipynb \
 	parallel-ipython.ipynb \
 	parallel-simple.ipynb \
+	parallel-client.ipynb \
+	parallel-async.ipynb \
 	software.ipynb \
 	acknowledgements.ipynb
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
@@ -42,6 +44,7 @@ SVG_IMAGES = \
 	ipython-local-parallelism.svg \
 	ipython-local-parallelism-one.svg \
 	ipython-mechanics.svg \
+	ipython-remote-client-parallelism.svg \
 	disease-periods.svg \
 	disease-types.svg
 IMAGES = \
@@ -97,7 +100,7 @@ UPLOADED = UPLOADED.txt
 IPYTHON = ipython
 JUPYTER = jupyter
 SERVER = $(JUPYTER) notebook --port 1626
-CONVERT = $(JUPYTER) nbconvert
+NBCONVERT = $(JUPYTER) nbconvert
 
 # Other tools
 PERL = perl
@@ -108,7 +111,8 @@ ACTIVATE = . bin/activate
 RSYNC = rsync -av
 BIB2X = $(PERL) ./bib2x --nodoi --visiblekeys --flat --sort
 PANDOC = pandoc
-INKSCAPE=inkscape
+INKSCAPE = inkscape
+CONVERT = convert
 PDFLATEX = pdflatex --interaction batchmode
 BIBTEX = bibtex
 MAKE = make
@@ -123,8 +127,8 @@ ZIP = zip
 TAIL = tail
 
 # Bibliography
-BIB_HTML = $(BIB:.bib=.html)
-BIB_TEX = $(BIB:.bib=.tex)
+BIB_HTML = complex-networks-bib.html
+BIB_TEX = complex-networks-bib.tex
 BIB_NOTEBOOK = bibliography.ipynb
 
 # Web HTML output
@@ -204,6 +208,12 @@ live: env-interactive
 
 
 # ----- Bibliography in a notebook -----
+
+$(BIB_HTML): $(BIB)
+	$(BIB2X) --html --barebones $(BIB) >$(BIB_HTML)
+
+$(BIB_TEX): $(BIB)
+	$(BIB2X) --latex $(BIB) >$(BIB_TEX)
 
 # Populate the bibliography template notebook
 $(BIB_NOTEBOOK): $(BIB) $(BIB_HTML) $(BIB_NOTEBOOK_TEMPLATE)
@@ -356,25 +366,22 @@ clean-env:
 
 # ----- Construction rules -----
 
-.SUFFIXES: .ipynb .bib .html .tex .md .svg .pdf .png
+.SUFFIXES: .ipynb .html .tex .md .svg .pdf .png
 
 .ipynb.html:
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(CONVERT) --to html $(HTML_OPTIONS) $<)
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(NBCONVERT) --to html $(HTML_OPTIONS) $<)
 
 .ipynb.tex:
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(CONVERT) --to latex $(PDF_OPTIONS) $<)
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(NBCONVERT) --to latex $(PDF_OPTIONS) $<)
 
 .ipynb.md:
-	$(CONVERT) --to markdown $<
-
-.bib.html:
-	$(BIB2X) --html --barebones $(BIB) >$(BIB_HTML)
-
-.bib.tex:
-	$(BIB2X) --latex $(BIB) >$(BIB_TEX)
+	$(NBCONVERT) --to markdown $<
 
 .svg.pdf:
 	$(INKSCAPE) $*.svg --export-pdf=$*.pdf
+
+.svg.png:
+	$(CONVERT) $*.svg $*.png
 
 
 # ----- Usage -----

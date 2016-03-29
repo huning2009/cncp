@@ -230,7 +230,7 @@ def open_html( fn, dir ):
     """Open an HTML document, returning it as an object"""
 
     # ingest the source file, recording its attributes
-    doc = BeautifulSoup(open(fn))
+    doc = BeautifulSoup(open(fn), "html.parser")
     doc['filename'] = fn
 
     # create the build directory structure

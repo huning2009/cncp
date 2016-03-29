@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="864px" height="387px" viewBox="0 0 864 387" enable-background="new 0 0 864 387" xml:space="preserve">
+<g>
+	<g>
+		<g enable-background="new    ">
+			<g>
+				<polygon points="575.078,301.763 575.136,310.395 509.845,311.096 509.787,302.464 				"/>
+			</g>
+			<g>
+				<polygon fill="#B62F26" points="575.078,301.763 575.136,310.395 562.15,327.647 562.092,319.015 				"/>
+			</g>
+			<g>
+				<polygon points="509.787,302.464 509.845,311.096 492.484,328.123 492.424,319.491 				"/>
+			</g>
+			<g>
+				
+					<rect x="522.975" y="288.72" transform="matrix(0.0068 1 -1 0.0068 847.259 -205.92)" fill="#B72F27" width="8.632" height="69.67"/>
+			</g>
+			<g>
+				<polygon fill="#CB362D" points="575.078,301.763 562.092,319.015 492.424,319.491 509.787,302.464 				"/>
+			</g>
+			<g>
+				<rect x="522.019" y="287.405" transform="matrix(0.0068 1 -1 0.0068 847.3256 -203.9547)" width="8.632" height="74.332"/>
+			</g>
+			<g>
+				<path d="M508.564,301.469l69.432-0.743l-14.529,19.288l-74.328,0.509L508.564,301.469z M562.092,319.015l12.986-17.252
+					l-65.291,0.701l-17.363,17.027L562.092,319.015"/>
+			</g>
+			<g>
+				<polygon points="577.996,300.726 578.054,309.358 563.525,328.646 563.467,320.014 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<circle fill="#EF4136" stroke="#000000" stroke-width="2" cx="423" cy="117" r="27"/>
+<g>
+	<g>
+		<g enable-background="new    ">
+			<g>
+				<polygon points="210.331,301.818 210.39,310.449 145.098,311.151 145.039,302.52 				"/>
+			</g>
+			<g>
+				<polygon fill="#0087BA" points="210.331,301.818 210.39,310.449 197.403,327.701 197.345,319.07 				"/>
+			</g>
+			<g>
+				
+					<rect x="158.23" y="288.78" transform="matrix(0.0068 1 -1 0.0068 485.0508 158.8764)" fill="#0088BB" width="8.632" height="69.671"/>
+			</g>
+			<g>
+				<polygon points="145.039,302.52 145.098,311.151 127.736,328.178 127.677,319.546 				"/>
+			</g>
+			<g>
+				<polygon fill="#0095CD" points="210.331,301.818 197.345,319.07 127.677,319.546 145.039,302.52 				"/>
+			</g>
+			<g>
+				<rect x="157.274" y="287.465" transform="matrix(0.0068 1 -1 0.0068 485.1173 160.8417)" width="8.632" height="74.333"/>
+			</g>
+			<g>
+				<path d="M143.817,301.524l69.432-0.743l-14.528,19.288l-74.33,0.509L143.817,301.524z M197.345,319.07l12.985-17.252
+					l-65.292,0.702l-17.362,17.026L197.345,319.07"/>
+			</g>
+			<g>
+				<polygon points="213.249,300.781 213.308,309.412 198.778,328.7 198.72,320.069 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="2" x1="225" y1="315" x2="488.054" y2="315"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="623.054" cy="104.14" r="27"/>
+<circle fill="#00AEEF" stroke="#000000" stroke-width="2" cx="171" cy="117" r="27"/>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" x1="216" y1="117" x2="378" y2="117"/>
+		<path d="M390.071,117c-5.68,2.106-12.727,5.703-17.094,9.51l3.438-9.51l-3.438-9.511C377.344,111.297,384.391,114.894,390.071,117
+			z"/>
+		<path d="M203.93,117c5.68-2.107,12.727-5.703,17.094-9.511L217.585,117l3.439,9.51C216.657,122.703,209.61,119.106,203.93,117z"/>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="171" y1="153" x2="171" y2="297"/>
+<text transform="matrix(1 0 0 1 119.0549 347.1399)" font-family="'MyriadPro-Regular'" font-size="12">Local (client) machine</text>
+<text transform="matrix(1 0 0 1 396.0002 80.9983)" font-family="'MyriadPro-Regular'" font-size="12">Controller</text>
+<text transform="matrix(1 0 0 1 665.9607 113.1399)" font-family="'MyriadPro-Regular'" font-size="12">Engines</text>
+<text transform="matrix(1 0 0 1 144.0002 80.9983)" font-family="'MyriadPro-Regular'" font-size="12">Notebook</text>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="614.054" cy="113.14" r="27"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="605.054" cy="122.14" r="27"/>
+<g>
+	<g>
+		<line fill="none" stroke="#000000" stroke-width="2" x1="468.057" y1="113.651" x2="562.051" y2="113.651"/>
+		<path d="M569.054,113.651c-3.295,2.106-7.384,5.703-9.918,9.51l1.995-9.51l-1.995-9.511
+			C561.67,107.948,565.76,111.544,569.054,113.651z"/>
+		<path d="M461.054,113.651c3.295-2.107,7.384-5.703,9.918-9.511l-1.996,9.511l1.996,9.51
+			C468.438,119.354,464.349,115.756,461.054,113.651z"/>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="515.054" y1="293.14" x2="443.054" y2="149.14"/>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="542.054" y1="293.14" x2="614.054" y2="149.14"/>
+<text transform="matrix(1 0 0 1 461.0544 347.1399)" font-family="'MyriadPro-Regular'" font-size="12">Remote (compute cluster) machine</text>
+</svg>

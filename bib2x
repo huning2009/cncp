@@ -117,19 +117,19 @@ sub parseBibfile
 	  # comment
 	  $bib = $1;
       }
-      elsif($bib =~ m/^\@string{[^}=]+\s*=[^}]*}(.*)$/is)
+      elsif($bib =~ m/^\@string\{[^}=]+\s*=[^}]*\}(.*)$/is)
       {
 	  # string declarations are ignored for now
 	  $bib = $1;
       }
-      elsif($bib =~ m/^\@preamble{[^}]*}(.*)$/is)
+      elsif($bib =~ m/^\@preamble\{[^}]*\}(.*)$/is)
       {
 	  # ...as is any preamble
 	  $bib = $1;
       }
       
       # entries
-      elsif($bib =~ /(@([a-zA-Z]+){([a-zA-Z0-9_\-\.\:\/]+)\s*,((\s*[a-zA-Z]+\s*=\s*([^\n]+),?)+)\s*\})\s*(.*)$/s)
+      elsif($bib =~ /(@([a-zA-Z]+)\{([a-zA-Z0-9_\-\.\:\/]+)\s*,((\s*[a-zA-Z]+\s*=\s*([^\n]+),?)+)\s*\})\s*(.*)$/s)
       {
 	  $ref = $1;   $bib = $7;
 	  $fs = $4;   $key = $3;
@@ -484,7 +484,7 @@ sub renderStartOfReference
     my $key = shift;
     return "" if($nolinks);
     if($format eq "html")
-    { return "<a id=\"$key\"/>" . ($visiblekeys ? "[$key]" : "") . "</a> "; }
+    { return "<a id=\"$key\">" . ($visiblekeys ? "[$key]" : "") . "</a> "; }
     elsif($format =~ /(bib)?tex/)
     { return ($visiblekeys ? "\\label{$key}[$key] " : ""); }
     else
@@ -514,20 +514,20 @@ sub deemphasise
     my $v = shift;
     if($format eq "html") {
 	# replace emphasis with appropriate HTML mark-up
-	$v =~ s|\\emph{([^}]*)}|<em>$1</em>|g;
-	$v =~ s|\\textit{([^}]*)}|<i>$1</i>|g;
-	$v =~ s|\\strong{([^}]*)}|<em>$1</em>|g;
-	$v =~ s|\\textbf{([^}]*)}|<b>$1</b>|g;
-	$v =~ s|\\texttt{([^}]*)}|<tt>$1</tt>|g;
-	$v =~ s|\\mathcal{([^}]*)}|<span style="font-family: cursive;">$1</span>|g;
+	$v =~ s|\\emph\{([^}]*)\}|<em>$1</em>|g;
+	$v =~ s|\\textit\{([^}]*)\}|<i>$1</i>|g;
+	$v =~ s|\\strong\{([^}]*)\}|<em>$1</em>|g;
+	$v =~ s|\\textbf\{([^}]*)\}|<b>$1</b>|g;
+	$v =~ s|\\texttt\{([^}]*)\}|<tt>$1</tt>|g;
+	$v =~ s|\\mathcal\{([^}]*)\}|<span style="font-family: cursive;">$1</span>|g;
     } else {
 	# remove all emphasis information
-	$v =~ s|\\emph{([^}]*)}|$1|g;
-	$v =~ s|\\textit{([^}]*)}|$1|g;
-	$v =~ s|\\strong{([^}]*)}|$1|g;
-	$v =~ s|\\textbf{([^}]*)}|$1|g;
-	$v =~ s|\\texttt{([^}]*)}|$1|g;
-	$v =~ s|\\mathcal{([^}]*)}|$1|g;
+	$v =~ s|\\emph\{([^}]*)\}|$1|g;
+	$v =~ s|\\textit\{([^}]*)\}|$1|g;
+	$v =~ s|\\strong\{([^}]*)\}|$1|g;
+	$v =~ s|\\textbf\{([^}]*)\}|$1|g;
+	$v =~ s|\\texttt\{([^}]*)\}|$1|g;
+	$v =~ s|\\mathcal\{([^}]*)\}|$1|g;
     }
     return $v;
 }
