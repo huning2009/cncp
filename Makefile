@@ -13,7 +13,11 @@ HEADER = complex-networks-complex-processes.ipynb
 NOTEBOOKS =  \
 	preface.ipynb \
 	introduction.ipynb \
+	getting-started.ipynb \
 	concepts.ipynb \
+	concepts-networks.ipynb \
+	concepts-paths.ipynb \
+	concepts-degree.ipynb \
 	er-networks.ipynb \
 	percolation.ipynb \
 	simulate.ipynb \
@@ -40,6 +44,7 @@ RAW_IMAGES = \
 	qr.png \
 	konigsberg-bridges.png
 SVG_IMAGES = \
+	concepts-degree.svg \
 	ipython-parallelism.svg \
 	ipython-local-parallelism.svg \
 	ipython-local-parallelism-one.svg \
@@ -51,6 +56,12 @@ IMAGES = \
 	$(RAW_IMAGES) \
 	$(SVG_IMAGES:.svg=.pdf) \
 	$(SVG_IMAGES:.svg=.png)
+
+# Source code coming along with the book
+SOURCES = \
+	src/setup.py \
+	src/cncp/__init__.py \
+	src/cncp/lattice.py
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
@@ -152,6 +163,7 @@ ZIP_FILES = \
 	$(NOTEBOOKS) \
 	$(BIB_NOTEBOOK) $(BIB) \
 	$(IMAGES) $(HTML_PLUGINS) \
+	$(SOURCES \
 	$(UPLOADED)
 
 # PDF output
