@@ -19,6 +19,8 @@ NOTEBOOKS =  \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
 	er-networks.ipynb \
+	er-networks-components.ipynb \
+	er-networks-maths.ipynb \
 	percolation.ipynb \
 	simulate.ipynb \
 	powerlaw.ipynb \
@@ -61,7 +63,8 @@ IMAGES = \
 SOURCES = \
 	src/setup.py \
 	src/cncp/__init__.py \
-	src/cncp/lattice.py
+	src/cncp/lattice.py \
+	src/cncp/ernetworks.py
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
