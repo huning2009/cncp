@@ -22,7 +22,6 @@
 Network Trash Folder
 Temporary Items
 .apdisk
-*.py
 *.txt
 
 # Windows
@@ -46,3 +45,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Python bytecode
+*.pyc
+
+# Emacs backups
+*~
