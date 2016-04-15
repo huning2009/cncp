@@ -27,6 +27,10 @@ NOTEBOOKS =  \
 	generating-networks.ipynb \
 	spectral.ipynb \
 	epidemic-spreading.ipynb \
+	epidemic-compartmented.ipynb \
+	epidemic-network.ipynb \
+	epidemic-synchronous.ipynb \
+	epidemic-gillespie.ipynb \
 	geodata.ipynb \
 	parallel.ipynb \
 	parallel-ipython.ipynb \
@@ -46,7 +50,7 @@ RAW_IMAGES = \
 	qr.png \
 	konigsberg-bridges.png
 SVG_IMAGES = \
-	concepts-degree.svg \
+	concepts-paths.svg \
 	ipython-parallelism.svg \
 	ipython-local-parallelism.svg \
 	ipython-local-parallelism-one.svg \
@@ -54,17 +58,16 @@ SVG_IMAGES = \
 	ipython-remote-client-parallelism.svg \
 	disease-periods.svg \
 	disease-types.svg
-IMAGES = \
-	$(RAW_IMAGES) \
-	$(SVG_IMAGES:.svg=.pdf) \
-	$(SVG_IMAGES:.svg=.png)
 
 # Source code coming along with the book
 SOURCES = \
 	src/setup.py \
 	src/cncp/__init__.py \
 	src/cncp/lattice.py \
-	src/cncp/ernetworks.py
+	src/cncp/ernetworks.py \
+	src/cncp/networkwithdynamics.py \
+	src/cncp/synchronousdynamics.py \
+	src/cncp/sirsynchronousdynamics.py
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
@@ -140,6 +143,11 @@ SED = sed -E
 ZIP = zip
 TAIL = tail
 
+# Images in different formats
+IMAGES = \
+	$(RAW_IMAGES) \
+	$(SVG_IMAGES)
+
 # Bibliography
 BIB_HTML = complex-networks-bib.html
 BIB_TEX = complex-networks-bib.tex
@@ -151,12 +159,17 @@ HTML_TEMPLATE = full
 HTML_OPTIONS = --template $(HTML_TEMPLATE) 
 HTML_STYLESHEET = custom.css
 HTML_PLUGINS = JSAnimation
-HTML_NOTEBOOKS = $(HEADER:.ipynb=.html) $(NOTEBOOKS:.ipynb=.html) $(BIB_NOTEBOOK:.ipynb=.html)
+HTML_NOTEBOOKS = \
+	$(HEADER:.ipynb=.html) \
+	$(NOTEBOOKS:.ipynb=.html) \
+	$(BIB_NOTEBOOK:.ipynb=.html)
 HTML_FILES = $(HTML_NOTEBOOKS)
 HTML_EXTRAS = \
 	$(HTML_STYLESHEET) \
 	$(HTML_PLUGINS) \
-	$(IMAGES)
+	$(IMAGES) \
+	$(SVG_IMAGES:.svg=.png)
+
 WWW_POSTPROCESS = $(PYTHON) ./www-postprocess.py
 
 # Zip'ped notebook output
@@ -183,7 +196,8 @@ PDF_EXTRAS = \
 	$(UPLOADED) \
 	$(BIB) \
 	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
-	$(IMAGES)
+	$(IMAGES) \
+	$(SVG_IMAGES:.svg=.pdf)
 
 # Computational environments and requirements
 ENV_COMPUTATIONAL = cncp-compute
@@ -201,6 +215,9 @@ help:
 
 # Build all the distributions of the book
 all: zip www pdf
+
+# Re-build the bibliography from the BibTeX source file
+bib: $(BIB_NOTEBOOK)
 
 # Upload all versions of the book to web server
 upload: upload-zip upload-www upload-pdf
@@ -275,7 +292,7 @@ clean-zip:
 # ----- Interactive HTML (www) distribution -----
 
 # Pre-process notebooks to HTML
-gen-www: $(HTML_FILES)
+gen-www: $(HTML_FILES) $(HTML_EXTRAS)
 
 # Build HTML (web) versions of notebooks
 www: env-interactive gen-www
@@ -412,11 +429,12 @@ Publishing:
    make upload  upload all version to web site (needs the keys)
 
 Maintenance:
+   make bib     re-build the bibliography
    make clean   clean-up for a clean build
 
 Running the code:
    make env     build virtualenvs using repo requirements.txt
-   make update  update requirements.txt and build virtualenvs
+   make update  update requirements.txt and re-build virtualenvs
    make live    run notebook in interactive virtualenv
 endef
 export HELP_MESSAGE
