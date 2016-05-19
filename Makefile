@@ -60,6 +60,7 @@ SVG_IMAGES = \
 	disease-types.svg
 
 # Source code coming along with the book
+SOURCES_DIR = src
 SOURCES = \
 	src/setup.py \
 	src/cncp/__init__.py \
@@ -116,7 +117,7 @@ UPLOADED = UPLOADED.txt
 # IPython and notebook functions
 IPYTHON = ipython
 JUPYTER = jupyter
-SERVER = $(JUPYTER) notebook --port 1626
+SERVER = PYTHONPATH=$(SOURCES_DIR) $(JUPYTER) notebook --port 1626
 NBCONVERT = $(JUPYTER) nbconvert
 
 # Other tools
@@ -236,7 +237,7 @@ clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-env
 
 # Run the notebook
 live: env-interactive
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(SERVER)) &
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(SERVER))
 
 
 # ----- Bibliography in a notebook -----
