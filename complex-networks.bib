@@ -111,7 +111,7 @@ url = "http://www.math.upenn.edu/~wilf/DownldGF.html",
 }
 
 
-%%% Processes %%%
+%%% General processes %%%
 
 @book{BBV12,
 author = "Alain Barrat and Marc Barth\'elemy and Alesssandro Vespignani",
@@ -119,16 +119,6 @@ title = "Dynamical processes on complex networks",
 publisher = "Cambridge University Press",
 year = 2013,
 isbn = "978-1-107-62625-6",
-{
-
-@article{CNSW00,
-author = "Duncan Callaway and M.E.J. Newman and Steven Strogatz and Duncan Watts",
-title = "Network robustness and fragility: percolation on random graphs",
-journal = "Physical Review Letters",
-volume = 85,
-number = 25,
-pages = "5468--5471",
-year = 2000,
 }
 
 @article{CPSV07,
@@ -149,15 +139,6 @@ isbn = "978-0-521-15016-3",
 year = 2010",
 }
 
-@article{GDB06,
-author = "Thilo Gross and Carlos J. {Dommar D’Lima} and Bernd Blasius",
-title = "Epidemic dynamics on an adaptive network",
-journal = "Physical Review Letters",
-volume = 96,
-year = 2006,
-url = "doi://10.1103/PhysRevLett.96.208701",
-}
-
 @book{Gri10,
 author = "Geoffrey Grimmett",
 title = "Probability on graphs: random processes on graphs and lattices",
@@ -169,7 +150,7 @@ year = 2010,
 @techreport{PG14,
 author = "Mason Porter and James Gleeson",
 title = "Dynamical systems on networks: a tutorial",
-number = "arXiv:abs/1403.7663v1",
+number = "arXiv:1403.7663v1",
 url = "http://arxiv.org/abs/1403.7663v1",
 year = 2014,
 }
@@ -185,8 +166,50 @@ url = "doi://10.1007/978-3-319-26641-1",
 year = 2016,
 }
 
+
+%%% Global processes %%%
+
+@techreport{ADKM08,
+author = "Alex Arenas and Albert D\'iaz-Guilera and Jurgen Kurths and Yamir Moreno and Changsong Zhou",
+title = Synchronization in complex networks",
+number = "arXiv:0805.2976",
+url = "http://arxiv.org/abs/0805.2976",
+year = 2008,
+}
+
+@article{CNSW00,
+author = "Duncan Callaway and M.E.J. Newman and Steven Strogatz and Duncan Watts",
+title = "Network robustness and fragility: percolation on random graphs",
+journal = "Physical Review Letters",
+volume = 85,
+number = 25,
+pages = "5468--5471",
+year = 2000,
+}
+
+@article{PC98,
+author = "Louis M. Pecora and Thomas L. Carroll",
+title = "Master stability functions for synchronized coupled systems",
+journal = "Physical Review Letters",
+volume = 80,
+number = 10,
+moonth = "March",
+year = 1998,
+pages = "2109--2112",
+url = "doi://10.1103/PhysRevLett.80.2109",
+}
+
+@article{RVF15,
+author = "Anca Ra\u{a}dulescu and Sergio Verduzco-Flores",
+title = "Nonlinear network dynamics under perturbations of the underlying graph",
+journal = "Chaos",
+volume = 25,
+year = 2015,
+url = "doi://10.1063/1.4906213",
+}
+
 @article{SWSSK02,
-author = "L.M. Sander and C.P.Warren and I.M. Sokolov and C. Simon and J. Koopman",
+author = "L.M. Sander and C.P. Warren and I.M. Sokolov and C. Simon and J. Koopman",
 title = "Percolation on heterogeneous networks as a model for epidemics",
 journal = "Mathematical Biosciences",
 volume - 180,
@@ -204,6 +227,25 @@ year = 2001,
 
 
 %%% Epidemic spreading %%%
+
+@article{GDB06,
+author = "Thilo Gross and Carlos J. {Dommar D’Lima} and Bernd Blasius",
+title = "Epidemic dynamics on an adaptive network",
+journal = "Physical Review Letters",
+volume = 96,
+year = 2006,
+url = "doi://10.1103/PhysRevLett.96.208701",
+}
+
+@article{BGM07,
+author = "Shweta Bansal and Bryan Grenfell and Lauren Ancel Meyers",
+title = "When individual behaviour matters: homogeneous and network models in epidemiology",
+journal = "Journal of the Royal Society Interface",
+volume = 4,
+pages = "879–-891",
+year = 2007,
+url = "doi://10.1098/rsif.2007.1100",
+}
 
 @article{BP02,
 author = "Mari\'an Bogu\~na and Romualdo Pastor-Satorras",
@@ -273,6 +315,15 @@ year = 2013,
 url = "doi://10.1371/journal.pone.0083622",
 }
 
+@article{LHNB15,
+author = "Gabriel Leventhal and Alison Hill and Martin Nowak and Sebastian Bonhoeffer",
+title = "Evolution and emergence of infectious diseases in theoretical and real-world networks",
+journal = "Nature Communications",
+volume = 6,
+year = 2015,
+url = "doi://10.1038/ncomms7101",
+}
+
 @article{Gra83,
 author = "Peter Grassberger",
 title = "On the critical behavior of the general epidemic process and dynamical percolation",
@@ -280,6 +331,20 @@ journal = "Mathematical Biosciences",
 volume = 63,
 pages = "157--172",
 year = 1983,
+}
+
+@incollection{Het89,
+author = "Herbert Hethcote",
+title = "Three basic epidemiological models",
+booktitle = "Applied Mathematical Ecology",
+editor = "Simon Levin and Thomas Hallam and Louis Gross",
+publisher = "Springer Verlag",
+series = "Biomathematics",
+volume = 18,
+pages = "119--144",
+year = 1989,
+url = "doi://10.1007/978-3-642-61317-3_5",
+isbn = "978-3-642-64789-5",
 }
 
 @article{Het00,
@@ -560,6 +625,16 @@ volume = 499,
 pages = "1--101",
 year = 2011,
 url = "doi://10.1016/j.physrep.2010.11.002",
+}
+
+@article{BF08,
+author = "Marc Barth\'elemy and Alessandro Flammini",
+title = "Modeling urban street patterns",
+journal = "Physical Review Letters",
+volume = 100,
+month = "April",
+year = 2008,
+url = "doi://10.1103/PhysRevLett.100.138702",
 }
 
 @book{Bat13,
