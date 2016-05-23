@@ -62,13 +62,15 @@ SVG_IMAGES = \
 # Source code coming along with the book
 SOURCES_DIR = src
 SOURCES = \
-	src/setup.py \
-	src/cncp/__init__.py \
-	src/cncp/lattice.py \
-	src/cncp/ernetworks.py \
-	src/cncp/networkwithdynamics.py \
-	src/cncp/synchronousdynamics.py \
-	src/cncp/sirsynchronousdynamics.py
+	$(SOURCES_DIR)/setup.py \
+	$(SOURCES_DIR)/cncp/__init__.py \
+	$(SOURCES_DIR)/cncp/lattice.py \
+	$(SOURCES_DIR)/cncp/ernetworks.py \
+	$(SOURCES_DIR)/cncp/networkwithdynamics.py \
+	$(SOURCES_DIR)/cncp/synchronousdynamics.py \
+	$(SOURCES_DIR)/cncp/sirsynchronousdynamics.py \
+	$(SOURCES_DIR)/cncp/stochasticdynamics.py \
+	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
@@ -180,7 +182,7 @@ ZIP_FILES = \
 	$(NOTEBOOKS) \
 	$(BIB_NOTEBOOK) $(BIB) \
 	$(IMAGES) $(HTML_PLUGINS) \
-	$(SOURCES \
+	$(SOURCES_DIR) \
 	$(UPLOADED)
 
 # PDF output
