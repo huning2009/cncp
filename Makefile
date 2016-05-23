@@ -182,7 +182,7 @@ ZIP_FILES = \
 	$(NOTEBOOKS) \
 	$(BIB_NOTEBOOK) $(BIB) \
 	$(IMAGES) $(HTML_PLUGINS) \
-	$(SOURCES_DIR) \
+	$(SOURCES) \
 	$(UPLOADED)
 
 # PDF output
@@ -223,8 +223,7 @@ all: zip www pdf
 bib: $(BIB_NOTEBOOK)
 
 # Upload all versions of the book to web server
-upload: upload-zip upload-www upload-pdf
-	make clean-uploaded
+upload: clean-uploaded upload-zip upload-www 
 
 # Build reproducible computational environments
 env: env-computational env-interactive
@@ -301,13 +300,12 @@ gen-www: $(HTML_FILES) $(HTML_EXTRAS)
 www: env-interactive gen-www
 	$(MKDIR) $(HTML_BUILD)
 	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(foreach fn, $(HTML_NOTEBOOKS), $(WWW_POSTPROCESS) $(fn) $(HTML_BUILD);))
-	$(CP) $(HTML_EXTRAS) $(HTML_BUILD)
+	$(CP) $(HTML_EXTRAS) $(UPLOADED) $(HTML_BUILD)
 
 # Upload HTML version of book
 upload-www: www $(UPLOADED)
 	cd $(HTML_BUILD) && \
 	$(RSYNC) \
-	$(UPLOADED) \
 	$(HTML_FILES) $(HTML_EXTRAS) \
 	$(EXTRA_FILES) \
 	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
