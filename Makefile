@@ -59,9 +59,9 @@ SVG_IMAGES = \
 	disease-periods.svg \
 	disease-types.svg
 
-# Source code coming along with the book
+# Source code that comes along with the book
 SOURCES_DIR = src
-SOURCES = \
+SOURCES_CODE = \
 	$(SOURCES_DIR)/setup.py \
 	$(SOURCES_DIR)/cncp/__init__.py \
 	$(SOURCES_DIR)/cncp/lattice.py \
@@ -70,7 +70,15 @@ SOURCES = \
 	$(SOURCES_DIR)/cncp/synchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/sirsynchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/stochasticdynamics.py \
-	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py
+	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py \
+	$(SOURCES_DIR)/cncp/experiment.py \
+	$(SOURCES_DIR)/cncp/lab.py
+SOURCES_TESTS = \
+	$(SOURCES_DIR)/cncp/test/experiments.py
+SOURCES_TESTSUITE = \
+	$(SOURCES_DIR)/cncp/test/__main__.py
+TESTSUITE = cncp.test
+SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS)  $(SOURCES_TESTSUITE)
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
@@ -121,6 +129,7 @@ IPYTHON = ipython
 JUPYTER = jupyter
 SERVER = PYTHONPATH=$(SOURCES_DIR) $(JUPYTER) notebook --port 1626
 NBCONVERT = $(JUPYTER) nbconvert
+TEST = PYTHONPATH=$(SOURCES_DIR) $(IPYTHON) -m $(TESTSUITE)
 
 # Other tools
 PERL = perl
@@ -239,6 +248,10 @@ clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-env
 # Run the notebook
 live: env-interactive
 	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(SERVER))
+
+# Run the source code test suite
+test: env-computational
+	($(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && $(CHDIR) .. && $(TEST))
 
 
 # ----- Bibliography in a notebook -----
@@ -424,10 +437,10 @@ Building the book:
    make all     build all versions
    make www     build the HTML version only
    make pdf     build the PDF version only
-   make zip     zip-up the version
+   make zip     zip-up the notebooks and other sources
 
 Publishing:
-   make upload  upload all version to web site (needs the keys)
+   make upload  upload all versions to web site (needs the keys)
 
 Maintenance:
    make bib     re-build the bibliography
@@ -437,6 +450,8 @@ Running the code:
    make env     build virtualenvs using repo requirements.txt
    make update  update requirements.txt and re-build virtualenvs
    make live    run notebook in interactive virtualenv
+   make test    run the test suite for the source code
+
 endef
 export HELP_MESSAGE
 
