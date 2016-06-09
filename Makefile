@@ -74,7 +74,8 @@ SOURCES_CODE = \
 	$(SOURCES_DIR)/cncp/experiment.py \
 	$(SOURCES_DIR)/cncp/lab.py
 SOURCES_TESTS = \
-	$(SOURCES_DIR)/cncp/test/experiments.py
+	$(SOURCES_DIR)/cncp/test/experiments.py \
+	$(SOURCES_DIR)/cncp/test/labs.py
 SOURCES_TESTSUITE = \
 	$(SOURCES_DIR)/cncp/test/__main__.py
 TESTSUITE = cncp.test
