@@ -72,10 +72,15 @@ SOURCES_CODE = \
 	$(SOURCES_DIR)/cncp/stochasticdynamics.py \
 	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py \
 	$(SOURCES_DIR)/cncp/experiment.py \
-	$(SOURCES_DIR)/cncp/lab.py
+	$(SOURCES_DIR)/cncp/lab.py \
+	$(SOURCES_DIR)/cncp/clusterlab.py \
+	$(SOURCES_DIR)/cncp/labnotebook.py \
+	$(SOURCES_DIR)/cncp/sqlitelabnotebook.py
 SOURCES_TESTS = \
 	$(SOURCES_DIR)/cncp/test/experiments.py \
-	$(SOURCES_DIR)/cncp/test/labs.py
+	$(SOURCES_DIR)/cncp/test/labs.py \
+	$(SOURCES_DIR)/cncp/test/clusterlabs.py \
+	$(SOURCES_DIR)/cncp/test/notebooks.py
 SOURCES_TESTSUITE = \
 	$(SOURCES_DIR)/cncp/test/__main__.py
 TESTSUITE = cncp.test
