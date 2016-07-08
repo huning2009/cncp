@@ -80,11 +80,12 @@ SOURCES_TESTS = \
 	$(SOURCES_DIR)/cncp/test/experiments.py \
 	$(SOURCES_DIR)/cncp/test/labs.py \
 	$(SOURCES_DIR)/cncp/test/clusterlabs.py \
-	$(SOURCES_DIR)/cncp/test/notebooks.py
+	$(SOURCES_DIR)/cncp/test/notebooks.py \
+	$(SOURCES_DIR)/cncp/test/sqlitenotebooks.py
 SOURCES_TESTSUITE = \
 	$(SOURCES_DIR)/cncp/test/__main__.py
 TESTSUITE = cncp.test
-SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS)  $(SOURCES_TESTSUITE)
+SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS) $(SOURCES_TESTSUITE)
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
