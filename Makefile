@@ -75,12 +75,14 @@ SOURCES_CODE = \
 	$(SOURCES_DIR)/cncp/lab.py \
 	$(SOURCES_DIR)/cncp/clusterlab.py \
 	$(SOURCES_DIR)/cncp/labnotebook.py \
+	$(SOURCES_DIR)/cncp/jsonlabnotebook.py \
 	$(SOURCES_DIR)/cncp/sqlitelabnotebook.py
 SOURCES_TESTS = \
 	$(SOURCES_DIR)/cncp/test/experiments.py \
 	$(SOURCES_DIR)/cncp/test/labs.py \
 	$(SOURCES_DIR)/cncp/test/clusterlabs.py \
 	$(SOURCES_DIR)/cncp/test/notebooks.py \
+	$(SOURCES_DIR)/cncp/test/jsonnotebooks.py \
 	$(SOURCES_DIR)/cncp/test/sqlitenotebooks.py
 SOURCES_TESTSUITE = \
 	$(SOURCES_DIR)/cncp/test/__main__.py
