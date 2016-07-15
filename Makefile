@@ -19,6 +19,8 @@ NOTEBOOKS =  \
 	concepts-networks.ipynb \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
+	concepts-processes.ipynb \
+	concepts-repetition.ipynb \
 	er-networks.ipynb \
 	er-networks-components.ipynb \
 	er-networks-maths.ipynb \
@@ -39,7 +41,8 @@ NOTEBOOKS =  \
 	parallel-client.ipynb \
 	parallel-async.ipynb \
 	software.ipynb \
-	acknowledgements.ipynb
+	acknowledgements.ipynb \
+	about.ipynb
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 
 # Additional source files
@@ -387,20 +390,6 @@ $(ENV_INTERACTIVE):
 	$(VIRTUALENV) $(ENV_INTERACTIVE)
 	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
 	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
-	@make mathjax
-
-# Install a local copy of MathJax so notebooks can work without a network connection
-define PY_INSTALL_MATHJAX
-import IPython
-from IPython.external import mathjax
-
-mathjax.install_mathjax()
-endef
-export PY_INSTALL_MATHJAX
-
-mathjax:
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(IPYTHON) -c "$$PY_INSTALL_MATHJAX")
-
 
 # Clean-up the generated environments
 clean-env:
