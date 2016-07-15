@@ -6,6 +6,7 @@
 # Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
 #
 
+
 # ----- Sources -----
 
 # IPython notebooks in book order
@@ -71,22 +72,9 @@ SOURCES_CODE = \
 	$(SOURCES_DIR)/cncp/sirsynchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/stochasticdynamics.py \
 	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py \
-	$(SOURCES_DIR)/cncp/experiment.py \
-	$(SOURCES_DIR)/cncp/lab.py \
-	$(SOURCES_DIR)/cncp/clusterlab.py \
-	$(SOURCES_DIR)/cncp/labnotebook.py \
-	$(SOURCES_DIR)/cncp/jsonlabnotebook.py \
-	$(SOURCES_DIR)/cncp/sqlitelabnotebook.py
-SOURCES_TESTS = \
-	$(SOURCES_DIR)/cncp/test/experiments.py \
-	$(SOURCES_DIR)/cncp/test/labs.py \
-	$(SOURCES_DIR)/cncp/test/clusterlabs.py \
-	$(SOURCES_DIR)/cncp/test/notebooks.py \
-	$(SOURCES_DIR)/cncp/test/jsonnotebooks.py \
-	$(SOURCES_DIR)/cncp/test/sqlitenotebooks.py
-SOURCES_TESTSUITE = \
-	$(SOURCES_DIR)/cncp/test/__main__.py
-TESTSUITE = cncp.test
+SOURCES_TESTS =
+SOURCES_TESTSUITE = test/__main__.py
+TESTSUITE = test
 SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS) $(SOURCES_TESTSUITE)
 
 # Python packages in computational environments
@@ -99,7 +87,8 @@ PY_COMPUTATIONAL = \
 	mpmath \
 	networkx \
 	dill \
-	paramiko
+	paramiko \
+	epyc
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
 	jupyter \
@@ -110,7 +99,6 @@ PY_INTERACTIVE = \
 	tornado \
 	pygments \
 	jinja2 \
-	folium \
 	beautifulsoup4 \
 	mistune \
 	pexpect
