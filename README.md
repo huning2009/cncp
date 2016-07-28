@@ -47,12 +47,6 @@ an interactive VM that's capable of building the book itself. The
 vm/ directory has the details. 
 
 
---
--- Simon
+Simon Dobson
 
-Professor Simon Dobson
-
-simon.dobson@computer.org
-http://www.simondobson.org
-
-St Andrews, UK. 10 July 2015.
+St Andrews, UK. 27 July 2016.
