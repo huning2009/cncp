@@ -47,7 +47,6 @@ NOTEBOOKS =  \
 	software.ipynb \
 	acknowledgements.ipynb \
 	about.ipynb
-BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 
 # Additional source files
 BIB = complex-networks.bib
@@ -195,7 +194,6 @@ HTML_EXTRAS = \
 	$(HTML_PLUGINS) \
 	$(IMAGES) \
 	$(SVG_IMAGES:.svg=.png)
-
 WWW_POSTPROCESS = $(PYTHON) $(ROOT)/www-postprocess.py
 
 # Zip'ped notebook output
@@ -257,8 +255,6 @@ update: clean-env newenv-computational newenv-interactive
 
 # Clean up the build
 clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-env
-	$(RM) $(HTML_NOTEBOOKS)
-	$(RM) $(NOTEBOOKS:.ipynb=_files) 
 
 # Run the notebook
 live: env-interactive
