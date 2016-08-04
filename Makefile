@@ -6,6 +6,9 @@
 # Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
 #
 
+# Root directory
+ROOT = $(shell pwd)
+
 
 # ----- Sources -----
 
@@ -20,14 +23,14 @@ NOTEBOOKS =  \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
 	concepts-processes.ipynb \
-	concepts-repetition.ipynb \
 	er-networks.ipynb \
 	er-networks-components.ipynb \
 	er-networks-maths.ipynb \
+	powerlaw.ipynb \
+	configuration.ipynb \
+	generating-functions.ipynb \
 	percolation.ipynb \
 	simulate.ipynb \
-	powerlaw.ipynb \
-	generating-networks.ipynb \
 	spectral.ipynb \
 	epidemic-spreading.ipynb \
 	epidemic-compartmented.ipynb \
@@ -40,6 +43,7 @@ NOTEBOOKS =  \
 	parallel-simple.ipynb \
 	parallel-client.ipynb \
 	parallel-async.ipynb \
+	software-epyc.ipynb \
 	software.ipynb \
 	acknowledgements.ipynb \
 	about.ipynb
@@ -70,15 +74,19 @@ SOURCES_CODE = \
 	$(SOURCES_DIR)/cncp/__init__.py \
 	$(SOURCES_DIR)/cncp/lattice.py \
 	$(SOURCES_DIR)/cncp/ernetworks.py \
-	$(SOURCES_DIR)/cncp/networkwithdynamics.py \
+	$(SOURCES_DIR)/cncp/networkdynamics.py \
 	$(SOURCES_DIR)/cncp/synchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/sirsynchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/stochasticdynamics.py \
-	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py \
-SOURCES_TESTS =
-SOURCES_TESTSUITE = test/__main__.py
+	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py
+SOURCES_TESTS = \
+	$(SOURCES_DIR)/test/__init__.py \
+	$(SOURCES_DIR)/test/__main__.py \
+	$(SOURCES_DIR)/test/sir.py \
+	$(SOURCES_DIR)/test/sirsynchronous.py \
+	$(SOURCES_DIR)/test/sirstochastic.py
 TESTSUITE = test
-SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS) $(SOURCES_TESTSUITE)
+SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS)
 
 # Python packages in computational environments
 PY_COMPUTATIONAL = \
@@ -104,7 +112,8 @@ PY_INTERACTIVE = \
 	jinja2 \
 	beautifulsoup4 \
 	mistune \
-	pexpect
+	pexpect \
+	sphinx
 
 # Packages that shouldn't be saved as requirements (because they're
 # OS-specific, in this case OS X, and screw up Linux compute servers)
@@ -147,10 +156,12 @@ BIBTEX = bibtex
 MAKE = make
 RM = rm -fr
 MKDIR = mkdir -p
+SH = sh
 CHDIR = cd
 TR = tr
 CP = cp -r
 MV = mv
+CAT = cat
 SED = sed -E
 ZIP = zip
 TAIL = tail
@@ -165,24 +176,27 @@ BIB_HTML = complex-networks-bib.html
 BIB_TEX = complex-networks-bib.tex
 BIB_NOTEBOOK = bibliography.ipynb
 
+# Build directory tree
+BUILD = build
+
 # Web HTML output
-HTML_BUILD = build/www
+HTML_BUILD = $(BUILD)/www
 HTML_TEMPLATE = full
 HTML_OPTIONS = --template $(HTML_TEMPLATE) 
 HTML_STYLESHEET = custom.css
 HTML_PLUGINS = JSAnimation
 HTML_NOTEBOOKS = \
-	$(HEADER:.ipynb=.html) \
-	$(NOTEBOOKS:.ipynb=.html) \
-	$(BIB_NOTEBOOK:.ipynb=.html)
-HTML_FILES = $(HTML_NOTEBOOKS)
+	$(HEADER) \
+	$(NOTEBOOKS) \
+	$(BIB_NOTEBOOK)
+HTML_FILES = $(HTML_NOTEBOOKS:.ipynb=.html)
 HTML_EXTRAS = \
 	$(HTML_STYLESHEET) \
 	$(HTML_PLUGINS) \
 	$(IMAGES) \
 	$(SVG_IMAGES:.svg=.png)
 
-WWW_POSTPROCESS = $(PYTHON) ./www-postprocess.py
+WWW_POSTPROCESS = $(PYTHON) $(ROOT)/www-postprocess.py
 
 # Zip'ped notebook output
 ZIP_FILE = complex-networks-complex-processes.zip
@@ -195,15 +209,16 @@ ZIP_FILES = \
 	$(UPLOADED)
 
 # PDF output
-PDF_BUILD = build/pdf
-PDF_TEMPLATE = complex-networks-complex-processes
-PDF_OPTIONS = --template $(PDF_TEMPLATE)
+PDF_BUILD = $(BUILD)/pdf
+PDF_TEMPLATE = complex-networks-complex-processes.tplx
+PDF_OPTIONS = --template $(PDF_TEMPLATE:.tplx=)
 PDF = complex-networks-complex-processes.pdf
 PDF_SKELETON = complex-networks-complex-processes.tex
 PDF_FRONTMATTER = front.tex
 PDF_BACKMATTER = back.tex
-PDF_NOTEBOOKS = $(NOTEBOOKS:.ipynb=.tex)
-PDF_FILES = $(PDF_SKELETON) $(PDF_NOTEBOOKS) $(BIB_TEX)
+#PDF_NOTEBOOKS = $(NOTEBOOKS)
+PDF_NOTEBOOKS = preface.ipynb concepts-processes.ipynb powerlaw.ipynb
+PDF_FILES = $(PDF_SKELETON) $(BIB_TEX)
 PDF_EXTRAS = \
 	$(UPLOADED) \
 	$(BIB) \
@@ -226,7 +241,7 @@ help:
 	@make usage
 
 # Build all the distributions of the book
-all: zip www pdf
+all: zip www
 
 # Re-build the bibliography from the BibTeX source file
 bib: $(BIB_NOTEBOOK)
@@ -300,26 +315,27 @@ upload-zip: zip $(UPLOADED)
 	@make clean-uploaded
 
 # Clean up the ZIP'ped notebooks
+
 clean-zip:
 	$(RM) $(ZIP_FILE)
 
-
 # ----- Interactive HTML (www) distribution -----
 
-# Pre-process notebooks to HTML
-gen-www: $(HTML_FILES) $(HTML_EXTRAS)
+# Create and populate the build directory
+gen-www: $(BIB_NOTEBOOK) $(UPLOADED)
+	$(MKDIR) $(HTML_BUILD)
+	$(CP) $(HTML_EXTRAS) $(UPLOADED) $(HTML_BUILD)
 
 # Build HTML (web) versions of notebooks
 www: env-interactive gen-www
-	$(MKDIR) $(HTML_BUILD)
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(foreach fn, $(HTML_NOTEBOOKS), $(WWW_POSTPROCESS) $(fn) $(HTML_BUILD);))
-	$(CP) $(HTML_EXTRAS) $(UPLOADED) $(HTML_BUILD)
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) $(ROOT)/$(HTML_BUILD) && $(foreach fn, $(patsubst %, $(ROOT)/%, $(HTML_NOTEBOOKS)), $(NBCONVERT) --to html $(HTML_OPTIONS) $(fn);))
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) $(ROOT)/$(HTML_BUILD) && $(foreach fn, $(HTML_FILES), $(WWW_POSTPROCESS) $(fn) .;))
 
 # Upload HTML version of book
-upload-www: www $(UPLOADED)
+upload-www: www
 	cd $(HTML_BUILD) && \
 	$(RSYNC) \
-	$(HTML_FILES) $(HTML_EXTRAS) \
+	$(HTML_FILES) $(HTML_FILES) $(HTML_EXTRAS) \
 	$(EXTRA_FILES) \
 	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
 	$(UPLOADED) \
@@ -336,12 +352,12 @@ clean-www:
 # PDF post-processing
 gen-pdf: $(PDF_FILES) $(UPLOADED)
 	$(MKDIR) $(PDF_BUILD)
-	$(foreach dn, $(PDF_NOTEBOOKS:.tex=_files), if [ -d $(dn) ]; then $(CP) $(dn) $(PDF_BUILD); fi;)
-	$(CP) $(PDF_FILES) $(PDF_EXTRAS) $(PDF_BUILD)
+	$(CP) $(PDF_FILES) $(PDF_EXTRAS) $(PDF_TEMPLATE) $(PDF_BUILD)
 
 # Generate PDF file via LaTeX
 pdf: env-interactive gen-pdf
-	cd $(PDF_BUILD) && \
+	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) ../$(PDF_BUILD) && $(foreach fn, $(patsubst %, $(ROOT)/%, $(PDF_NOTEBOOKS)), $(NBCONVERT) --to latex $(PDF_OPTIONS) $(fn);))
+	$(CHDIR) $(PDF_BUILD) \
 	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
 	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
 	exit 0
@@ -357,7 +373,6 @@ upload-pdf: pdf $(UPLOADED)
 
 # Clean up the PDF build
 clean-pdf:
-	$(RM) $(PDF_NOTEBOOKS)
 	$(RM) $(PDF_BUILD)
 
 
@@ -398,16 +413,7 @@ clean-env:
 
 # ----- Construction rules -----
 
-.SUFFIXES: .ipynb .html .tex .md .svg .pdf .png
-
-.ipynb.html:
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(NBCONVERT) --to html $(HTML_OPTIONS) $<)
-
-.ipynb.tex:
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(NBCONVERT) --to latex $(PDF_OPTIONS) $<)
-
-.ipynb.md:
-	$(NBCONVERT) --to markdown $<
+.SUFFIXES: .svg .pdf .png
 
 .svg.pdf:
 	$(INKSCAPE) $*.svg --export-pdf=$*.pdf
@@ -434,8 +440,8 @@ Maintenance:
 
 Running the code:
    make env     build virtualenvs using repo requirements.txt
-   make update  update requirements.txt and re-build virtualenvs
-   make live    run notebook in interactive virtualenv
+   make update  re-build and update virtualenvs to latest package versions
+   make live    run a notebook server 
    make test    run the test suite for the source code
 
 endef
