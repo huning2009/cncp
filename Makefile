@@ -394,13 +394,13 @@ newenv-interactive:
 $(ENV_COMPUTATIONAL):
 	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
 	$(CP) $(REQ_COMPUTATIONAL) $(ENV_COMPUTATIONAL)/requirements.txt
-	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
+	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && $(PIP) install --upgrade pip && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
 
 # Only re-build interactive environment if the directory is missing
 $(ENV_INTERACTIVE):
 	$(VIRTUALENV) $(ENV_INTERACTIVE)
 	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
-	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
+	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) &&  $(PIP) install --upgrade pip && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
 
 # Clean-up the generated environments
 clean-env:
