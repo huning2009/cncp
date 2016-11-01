@@ -4,7 +4,7 @@ certifi==2015.11.20.1
 decorator==4.0.9
 dill==0.2.5
 ecdsa==0.13
-epyc==0.7.1
+epyc==0.8.1
 futures==3.0.4
 gnureadline==6.3.3
 ipykernel==4.2.2
