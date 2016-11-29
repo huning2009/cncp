@@ -17,12 +17,16 @@ HEADER = complex-networks-complex-processes.ipynb
 NOTEBOOKS =  \
 	preface.ipynb \
 	introduction.ipynb \
+	\
+	part-getting-started.ipynb \
 	getting-started.ipynb \
 	concepts.ipynb \
 	concepts-networks.ipynb \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
 	concepts-processes.ipynb \
+	\
+	part-networks-processes.ipynb \
 	er-networks.ipynb \
 	er-networks-components.ipynb \
 	er-networks-maths.ipynb \
@@ -30,21 +34,29 @@ NOTEBOOKS =  \
 	configuration.ipynb \
 	generating-functions.ipynb \
 	percolation.ipynb \
-	simulate.ipynb \
-	spectral.ipynb \
 	epidemic-spreading.ipynb \
 	epidemic-compartmented.ipynb \
 	epidemic-network.ipynb \
 	epidemic-synchronous.ipynb \
 	epidemic-gillespie.ipynb \
-	geodata.ipynb \
+	\
+	part-scale.ipynb \
 	parallel.ipynb \
 	parallel-ipython.ipynb \
 	parallel-simple.ipynb \
 	parallel-client.ipynb \
 	parallel-async.ipynb \
+	\
+	part-topics.ipynb \
+	spectral.ipynb \
+	geodata.ipynb \
+	\
+	part-tools.ipynb \
+	software-venv.ipynb \
 	software-epyc.ipynb \
 	software.ipynb \
+	simulate.ipynb \
+	\
 	acknowledgements.ipynb \
 	about.ipynb
 
@@ -55,7 +67,8 @@ BIB = complex-networks.bib
 RAW_IMAGES = \
 	cc-at-nc-sa.png \
 	qr.png \
-	konigsberg-bridges.png
+	konigsberg-bridges.png \
+	sd.jpg
 SVG_IMAGES = \
 	concepts-paths.svg \
 	ipython-parallelism.svg \
@@ -76,8 +89,10 @@ SOURCES_CODE = \
 	$(SOURCES_DIR)/cncp/networkdynamics.py \
 	$(SOURCES_DIR)/cncp/synchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/sirsynchronousdynamics.py \
+	$(SOURCES_DIR)/cncp/sissynchronousdynamics.py \
 	$(SOURCES_DIR)/cncp/stochasticdynamics.py \
-	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py
+	$(SOURCES_DIR)/cncp/sirstochasticdynamics.py \
+	$(SOURCES_DIR)/cncp/sisstochasticdynamics.py
 SOURCES_TESTS = \
 	$(SOURCES_DIR)/test/__init__.py \
 	$(SOURCES_DIR)/test/__main__.py \
@@ -87,9 +102,11 @@ SOURCES_TESTS = \
 TESTSUITE = test
 SOURCES = $(SOURCES_CODE) $(SOURCES_TESTS)
 
-# Python packages in computational environments
+# Python packages in reproducible virtual environments
+# Computational environment, for running simulations
 PY_COMPUTATIONAL = \
 	ipython \
+	cython \
 	pyzmq \
 	ipyparallel \
 	numpy \
@@ -97,8 +114,10 @@ PY_COMPUTATIONAL = \
 	mpmath \
 	networkx \
 	dill \
+	pycrypto \
 	paramiko \
 	epyc
+# Interactive environment, for running notebooks and building the book
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
 	jupyter \
@@ -164,6 +183,7 @@ CAT = cat
 SED = sed -E
 ZIP = zip
 TAIL = tail
+XARGS = xargs
 
 # Images in different formats
 IMAGES = \
@@ -173,6 +193,7 @@ IMAGES = \
 # Bibliography
 BIB_HTML = complex-networks-bib.html
 BIB_TEX = complex-networks-bib.tex
+BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 BIB_NOTEBOOK = bibliography.ipynb
 
 # Build directory tree
@@ -245,7 +266,7 @@ all: zip www
 bib: $(BIB_NOTEBOOK)
 
 # Upload all versions of the book to web server
-upload: clean-uploaded upload-zip upload-www 
+upload: clean-uploaded $(UPLOADED) upload-zip upload-www 
 
 # Build reproducible computational environments
 env: env-computational env-interactive
@@ -308,7 +329,6 @@ upload-zip: zip $(UPLOADED)
 	$(ZIP_FILE) \
 	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
-	@make clean-uploaded
 
 # Clean up the ZIP'ped notebooks
 
@@ -328,7 +348,7 @@ www: env-interactive gen-www
 	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) $(ROOT)/$(HTML_BUILD) && $(foreach fn, $(HTML_FILES), $(WWW_POSTPROCESS) $(fn) .;))
 
 # Upload HTML version of book
-upload-www: www
+upload-www: www  $(UPLOADED)
 	cd $(HTML_BUILD) && \
 	$(RSYNC) \
 	$(HTML_FILES) $(HTML_FILES) $(HTML_EXTRAS) \
@@ -336,7 +356,6 @@ upload-www: www
 	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
 	$(UPLOADED) \
 	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
-	@make clean-uploaded
 
 # Clean up the HTML book
 clean-www:
@@ -394,13 +413,13 @@ newenv-interactive:
 $(ENV_COMPUTATIONAL):
 	$(VIRTUALENV) $(ENV_COMPUTATIONAL)
 	$(CP) $(REQ_COMPUTATIONAL) $(ENV_COMPUTATIONAL)/requirements.txt
-	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && $(PIP) install --upgrade pip && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
+	$(CHDIR) $(ENV_COMPUTATIONAL) && $(ACTIVATE) && $(XARGS) $(PIP) install <requirements.txt && $(PIP) freeze >requirements.txt
 
 # Only re-build interactive environment if the directory is missing
 $(ENV_INTERACTIVE):
 	$(VIRTUALENV) $(ENV_INTERACTIVE)
 	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
-	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) &&  $(PIP) install --upgrade pip && $(PIP) install -r requirements.txt && $(PIP) freeze >requirements.txt
+	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(XARGS) $(PIP) install <requirements.txt && $(PIP) freeze >requirements.txt
 
 # Clean-up the generated environments
 clean-env:
