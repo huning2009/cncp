@@ -14,7 +14,7 @@ dill==0.2.5
 docutils==0.12
 entrypoints==0.2.2
 enum34==1.1.6
-epyc==0.8.1
+epyc==0.9.1
 functools32==3.2.3.post2
 futures==3.0.5
 idna==2.1
