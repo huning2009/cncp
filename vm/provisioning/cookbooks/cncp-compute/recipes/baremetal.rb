@@ -68,11 +68,11 @@ end
 # ----- Login -----
 
 # Update .bashrc to drop the user straight into the virtualenv
-if ::File.exists?("#{node[:cncp][:dir]}/run_in_virtualenv.sh")
+if ::File.exists?(::File.join(node[:cncp][:dir], "/run_in_virtualenv.sh"))
   Chef::Log.info ".bashrc already updated (probably)"
 else
   # Create the activation script
-  file "#{node[:cncp][:dir]}/run_in_virtualenv.sh" do
+  file ::File.join(node[:cncp][:dir], "/run_in_virtualenv.sh") do
     owner node[:cncp][:user]
     content "cd #{node[:cncp][:dir]}/#{node[:cncp][:virtualenv]} ; . bin/activate"
   end

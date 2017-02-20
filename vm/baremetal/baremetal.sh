@@ -31,6 +31,7 @@ else
 	$GIT remote add origin $CNCP_REPO_URL &&
 	$GIT config core.sparsecheckout true &&
 	echo 'vm/*' >> .git/info/sparse-checkout &&
+	echo 'src/*' >> .git/info/sparse-checkout &&
 	$GIT pull --depth=1 origin master)
 fi
 
