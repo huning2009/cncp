@@ -138,16 +138,6 @@ PY_INTERACTIVE = \
 PY_NON_REQUIREMENTS = \
 	appnope
 
-# Remote destinations
-# (assumes the necessary keys are already installed)
-REMOTE_USER = root
-REMOTE_HOST = away.simondobson.org
-REMOTE_DIR = /var/www/simondobson.org/complex-networks-complex-processes/content
-
-# Timestamping
-TIMESTAMP = `date "+%Y-%m-%d %H:%M"`
-UPLOADED = UPLOADED.txt
-
 
 # ----- Commands and options -----
 
@@ -199,52 +189,6 @@ BIB_NOTEBOOK = bibliography.ipynb
 # Build directory tree
 BUILD = build
 
-# Web HTML output
-HTML_BUILD = $(BUILD)/www
-HTML_TEMPLATE = full
-HTML_OPTIONS = --template $(HTML_TEMPLATE) 
-HTML_STYLESHEET = custom.css
-HTML_PLUGINS = JSAnimation
-HTML_NOTEBOOKS = \
-	$(HEADER) \
-	$(NOTEBOOKS) \
-	$(BIB_NOTEBOOK)
-HTML_FILES = $(HTML_NOTEBOOKS:.ipynb=.html)
-HTML_EXTRAS = \
-	$(HTML_STYLESHEET) \
-	$(HTML_PLUGINS) \
-	$(IMAGES) \
-	$(SVG_IMAGES:.svg=.png)
-WWW_POSTPROCESS = $(PYTHON) $(ROOT)/www-postprocess.py
-
-# Zip'ped notebook output
-ZIP_FILE = complex-networks-complex-processes.zip
-ZIP_FILES = \
-	$(HEADER) \
-	$(NOTEBOOKS) \
-	$(BIB_NOTEBOOK) $(BIB) \
-	$(IMAGES) $(HTML_PLUGINS) \
-	$(SOURCES) \
-	$(UPLOADED)
-
-# PDF output
-PDF_BUILD = $(BUILD)/pdf
-PDF_TEMPLATE = complex-networks-complex-processes.tplx
-PDF_OPTIONS = --template $(PDF_TEMPLATE:.tplx=)
-PDF = complex-networks-complex-processes.pdf
-PDF_SKELETON = complex-networks-complex-processes.tex
-PDF_FRONTMATTER = front.tex
-PDF_BACKMATTER = back.tex
-#PDF_NOTEBOOKS = $(NOTEBOOKS)
-PDF_NOTEBOOKS = preface.ipynb concepts-processes.ipynb powerlaw.ipynb
-PDF_FILES = $(PDF_SKELETON) $(BIB_TEX)
-PDF_EXTRAS = \
-	$(UPLOADED) \
-	$(BIB) \
-	$(PDF_FRONTMATTER) $(PDF_BACKMATTER) \
-	$(IMAGES) \
-	$(SVG_IMAGES:.svg=.pdf)
-
 # Computational environments and requirements
 ENV_COMPUTATIONAL = cncp-compute
 ENV_INTERACTIVE = cncp
@@ -259,14 +203,8 @@ NON_REQUIREMENTS = $(SED) $(patsubst %, -e '/^%*/d', $(PY_NON_REQUIREMENTS))
 help:
 	@make usage
 
-# Build all the distributions of the book
-all: zip www
-
 # Re-build the bibliography from the BibTeX source file
 bib: $(BIB_NOTEBOOK)
-
-# Upload all versions of the book to web server
-upload: clean-uploaded $(UPLOADED) upload-zip upload-www 
 
 # Build reproducible computational environments
 env: env-computational env-interactive
@@ -275,7 +213,7 @@ env: env-computational env-interactive
 update: clean-env newenv-computational newenv-interactive
 
 # Clean up the build
-clean: clean-uploaded clean-bib clean-zip clean-www clean-pdf clean-env
+clean: clean-bib clean-zip clean-env
 
 # Run the notebook
 live: env-interactive
@@ -304,91 +242,6 @@ $(BIB_NOTEBOOK): $(BIB) $(BIB_HTML) $(BIB_NOTEBOOK_TEMPLATE)
 # Clean the generated notebook and LaTeX file
 clean-bib:
 	$(RM) $(BIB_NOTEBOOK) $(BIB_HTML) $(BIB_TEX)
-
-
-# ----- Creation timestamp -----
-
-# Generate a timestamp file
-$(UPLOADED):
-	echo "Last updated $(TIMESTAMP)" >$(UPLOADED)
-
-# Clean the timestamp file
-clean-uploaded:
-	$(RM) $(UPLOADED)
-
-
-# ----- Notebook (ZIP) distribution -----
-
-# Package notebooks as a ZIP file
-zip: $(ZIP_FILES)
-	$(ZIP) $(ZIP_FILE) $(ZIP_FILES)
-
-# Upload ZIP file of notebooks
-upload-zip: zip $(UPLOADED)
-	$(RSYNC) \
-	$(ZIP_FILE) \
-	$(UPLOADED) \
-	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
-
-# Clean up the ZIP'ped notebooks
-
-clean-zip:
-	$(RM) $(ZIP_FILE)
-
-# ----- Interactive HTML (www) distribution -----
-
-# Create and populate the build directory
-gen-www: $(BIB_NOTEBOOK) $(UPLOADED)
-	$(MKDIR) $(HTML_BUILD)
-	$(CP) $(HTML_EXTRAS) $(UPLOADED) $(HTML_BUILD)
-
-# Build HTML (web) versions of notebooks
-www: env-interactive gen-www
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) $(ROOT)/$(HTML_BUILD) && $(foreach fn, $(patsubst %, $(ROOT)/%, $(HTML_NOTEBOOKS)), $(NBCONVERT) --to html $(HTML_OPTIONS) $(fn);))
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) $(ROOT)/$(HTML_BUILD) && $(foreach fn, $(HTML_FILES), $(WWW_POSTPROCESS) $(fn) .;))
-
-# Upload HTML version of book
-upload-www: www  $(UPLOADED)
-	cd $(HTML_BUILD) && \
-	$(RSYNC) \
-	$(HTML_FILES) $(HTML_FILES) $(HTML_EXTRAS) \
-	$(EXTRA_FILES) \
-	$(HTML_STYLESHEET) $(HTML_PLUGINS) \
-	$(UPLOADED) \
-	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
-
-# Clean up the HTML book
-clean-www:
-	$(RM) $(HTML_BUILD)
-
-
-# ----- PDF distribution -----
-
-# PDF post-processing
-gen-pdf: $(PDF_FILES) $(UPLOADED)
-	$(MKDIR) $(PDF_BUILD)
-	$(CP) $(PDF_FILES) $(PDF_EXTRAS) $(PDF_TEMPLATE) $(PDF_BUILD)
-
-# Generate PDF file via LaTeX
-pdf: env-interactive gen-pdf
-	($(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) ../$(PDF_BUILD) && $(foreach fn, $(patsubst %, $(ROOT)/%, $(PDF_NOTEBOOKS)), $(NBCONVERT) --to latex $(PDF_OPTIONS) $(fn);))
-	$(CHDIR) $(PDF_BUILD) \
-	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
-	$(PDFLATEX) $(PDF_SKELETON:.tex=) ; \
-	exit 0
-
-# Upload PDF version of book
-upload-pdf: pdf $(UPLOADED)
-	cd $(PDF_BUILD) && \
-	$(RSYNC) \
-	$(PDF) \
-	$(UPLOADED) \
-	$(REMOTE_USER)@$(REMOTE_HOST):$(REMOTE_DIR)
-	@make clean-uploaded
-
-# Clean up the PDF build
-clean-pdf:
-	$(RM) $(PDF_BUILD)
 
 
 # ----- Computational environments -----
@@ -441,13 +294,7 @@ clean-env:
 
 define HELP_MESSAGE
 Building the book:
-   make all     build all versions
-   make www     build the HTML version only
-   make pdf     build the PDF version only
-   make zip     zip-up the notebooks and other sources
-
-Publishing:
-   make upload  upload all versions to web site (needs the keys)
+   (All disabled at the moment)
 
 Maintenance:
    make bib     re-build the bibliography
