@@ -1,6 +1,6 @@
 # Makefile for "Complex networks, complex processes"
 #
-# Copyright (C) 2014-2016 Simon Dobson
+# Copyright (C) 2014-2017 Simon Dobson
 # 
 # Licensed under the Creative Commons Attribution-Noncommercial-Share
 # Alike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/).
@@ -22,6 +22,7 @@ NOTEBOOKS =  \
 	getting-started.ipynb \
 	concepts.ipynb \
 	concepts-networks.ipynb \
+	concepts-geometry.ipynb \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
 	concepts-processes.ipynb \
@@ -31,8 +32,6 @@ NOTEBOOKS =  \
 	er-networks-components.ipynb \
 	er-networks-maths.ipynb \
 	powerlaw.ipynb \
-	configuration.ipynb \
-	generating-functions.ipynb \
 	percolation.ipynb \
 	epidemic-spreading.ipynb \
 	epidemic-compartmented.ipynb \
@@ -48,6 +47,8 @@ NOTEBOOKS =  \
 	parallel-async.ipynb \
 	\
 	part-topics.ipynb \
+	configuration.ipynb \
+	generating-functions.ipynb \
 	spectral.ipynb \
 	geodata.ipynb \
 	\
@@ -138,11 +139,17 @@ PY_INTERACTIVE = \
 PY_NON_REQUIREMENTS = \
 	appnope
 
+# JSAnimation plug-in we use for the notebooks
+JSANIMATION_DIST = https://github.com/jakevdp/JSAnimation/archive/master.zip
+JSANIMATION_ZIP = jsanimation.zip
+JSANIMATION_DIR = JSAnimation-master
+
 
 # ----- Commands and options -----
 
 # IPython and notebook functions
 IPYTHON = ipython
+PYTHON = python
 JUPYTER = jupyter
 SERVER = PYTHONPATH=$(SOURCES_DIR) $(JUPYTER) notebook --port 1626
 NBCONVERT = $(JUPYTER) nbconvert
@@ -172,8 +179,10 @@ MV = mv
 CAT = cat
 SED = sed -E
 ZIP = zip
+UNZIP = unzip
 TAIL = tail
 XARGS = xargs
+WGET = wget
 
 # Images in different formats
 IMAGES = \
@@ -186,8 +195,15 @@ BIB_TEX = complex-networks-bib.tex
 BIB_NOTEBOOK_TEMPLATE = bibliography-template.ipynb
 BIB_NOTEBOOK = bibliography.ipynb
 
-# Build directory tree
-BUILD = build
+# HTML build
+HTML_TEMPLATE = basic
+HTML_NBCONVERT = $(JUPYTER) nbconvert --to html --template $(HTML_TEMPLATE) 
+HTML_HEADER = $(HEADER:.ipynb=.html)
+HTML_NOTEBOOKS = $(NOTEBOOKS:.ipynb=.html)
+HTML_IMAGES = $(RAW_IMAGES) $(SVG_IMAGES:.svg=.png)
+HTML_FILES = $(HTML_HEADER) $(HTML_NOTEBOOKS) $(BIB_HTML)
+HTML_ALL = $(HTML_FILES) $(HTML_IMAGES)
+
 
 # Computational environments and requirements
 ENV_COMPUTATIONAL = cncp-compute
@@ -213,7 +229,7 @@ env: env-computational env-interactive
 update: clean-env newenv-computational newenv-interactive
 
 # Clean up the build
-clean: clean-bib clean-zip clean-env
+clean: clean-bib clean-zip clean-html clean-env
 
 # Run the notebook
 live: env-interactive
@@ -244,6 +260,14 @@ clean-bib:
 	$(RM) $(BIB_NOTEBOOK) $(BIB_HTML) $(BIB_TEX)
 
 
+# ----- HTML files -----
+
+html: $(HTML_FILES)
+
+clean-html:
+	$(RM) $(HTML_FILES)
+
+
 # ----- Computational environments -----
 
 # Computation-only software
@@ -255,7 +279,7 @@ newenv-computational:
 	$(NON_REQUIREMENTS) $(ENV_COMPUTATIONAL)/requirements.txt >$(REQ_COMPUTATIONAL)
 
 # Interactive software
-env-interactive: $(ENV_INTERACTIVE)
+env-interactive: $(ENV_INTERACTIVE) jsanimation
 
 newenv-interactive:
 	echo $(PY_INTERACTIVE) | $(TR) ' ' '\n' >$(REQ_INTERACTIVE)
@@ -274,6 +298,11 @@ $(ENV_INTERACTIVE):
 	$(CP) $(REQ_INTERACTIVE) $(ENV_INTERACTIVE)/requirements.txt
 	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(XARGS) $(PIP) install <requirements.txt && $(PIP) freeze >requirements.txt
 
+# Download and install the JSAnimation plug-in
+# See https://gist.github.com/gforsyth/188c32b6efe834337d8a
+jsanimation:
+	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(WGET) -O $(JSANIMATION_ZIP) $(JSANIMATION_DIST) && $(UNZIP) $(JSANIMATION_ZIP) && $(CHDIR) $(JSANIMATION_DIR) &&$(PYTHON) setup.py install
+
 # Clean-up the generated environments
 clean-env:
 	$(RM) $(ENV_COMPUTATIONAL) $(ENV_INTERACTIVE)
@@ -281,7 +310,7 @@ clean-env:
 
 # ----- Construction rules -----
 
-.SUFFIXES: .svg .pdf .png
+.SUFFIXES: .svg .pdf .png .ipynb .html
 
 .svg.pdf:
 	$(INKSCAPE) $*.svg --export-pdf=$*.pdf
@@ -289,12 +318,15 @@ clean-env:
 .svg.png:
 	$(CONVERT) $*.svg $*.png
 
+.ipynb.html:
+	$(CHDIR) $(ENV_INTERACTIVE) && $(ACTIVATE) && $(CHDIR) .. && $(HTML_NBCONVERT) $*.ipynb
+
 
 # ----- Usage -----
 
 define HELP_MESSAGE
 Building the book:
-   (All disabled at the moment)
+   make html    build as linked HTML files for blog
 
 Maintenance:
    make bib     re-build the bibliography
