@@ -13,7 +13,7 @@ ROOT = $(shell pwd)
 # ----- Sources -----
 
 # IPython notebooks in book order
-HEADER = complex-networks-complex-processes.ipynb
+HEADER = index.ipynb
 NOTEBOOKS =  \
 	preface.ipynb \
 	introduction.ipynb \
