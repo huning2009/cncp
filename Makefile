@@ -26,6 +26,7 @@ NOTEBOOKS =  \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
 	concepts-processes.ipynb \
+	concepts-stochastic.ipynb \
 	\
 	part-networks-processes.ipynb \
 	er-networks.ipynb \
