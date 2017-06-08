@@ -50,6 +50,7 @@ NOTEBOOKS =  \
 	part-topics.ipynb \
 	configuration.ipynb \
 	generating-functions.ipynb \
+	excess-degree.ipynb \
 	spectral.ipynb \
 	geodata.ipynb \
 	\
