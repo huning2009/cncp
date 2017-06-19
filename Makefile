@@ -25,6 +25,7 @@ NOTEBOOKS =  \
 	concepts-geometry.ipynb \
 	concepts-paths.ipynb \
 	concepts-degree.ipynb \
+	concepts-components.ipynb \
 	concepts-processes.ipynb \
 	concepts-stochastic.ipynb \
 	\
