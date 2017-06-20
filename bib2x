@@ -558,7 +558,8 @@ sub detex
     $v =~ s|\\ss|$l&szlig$r|g;
     $v =~ s|\\~(.)|$l&$1tilde;$r|g;
     $v =~ s|\\([Oo])|$l&$1slash;$r|g;
-    $v =~ s|\\v(s)|&#353;|g;
+    $v =~ s|\\vs|&#353;|g;
+    $v =~ s|\\Ho|&#337;|g;
     $v =~ s|\\&|$l&amp;$r|g;
     $v =~ s|---|$l&mdash;$r|g;
     $v =~ s|--|$l&ndash;$r|g;
