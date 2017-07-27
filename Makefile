@@ -38,6 +38,7 @@ NOTEBOOKS =  \
 	epidemic-spreading.ipynb \
 	epidemic-compartmented.ipynb \
 	epidemic-network.ipynb \
+	software-epydemic.ipynb \
 	epidemic-synchronous.ipynb \
 	epidemic-gillespie.ipynb \
 	\
@@ -120,7 +121,8 @@ PY_COMPUTATIONAL = \
 	dill \
 	pycrypto \
 	paramiko \
-	epyc
+	epyc \
+	epydemic
 # Interactive environment, for running notebooks and building the book
 PY_INTERACTIVE = \
 	$(PY_COMPUTATIONAL) \
