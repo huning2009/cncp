@@ -39,6 +39,7 @@ NOTEBOOKS =  \
 	epidemic-compartmented.ipynb \
 	epidemic-network.ipynb \
 	software-epydemic.ipynb \
+	epidemic-simulation.ipynb \
 	epidemic-synchronous.ipynb \
 	epidemic-gillespie.ipynb \
 	\
@@ -82,7 +83,8 @@ SVG_IMAGES = \
 	ipython-mechanics.svg \
 	ipython-remote-client-parallelism.svg \
 	disease-periods.svg \
-	disease-types.svg
+	disease-types.svg \
+	epydemic-dynamics-classes.svg
 
 # Source code that comes along with the book
 SOURCES_DIR = src
