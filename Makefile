@@ -84,7 +84,8 @@ SVG_IMAGES = \
 	ipython-remote-client-parallelism.svg \
 	disease-periods.svg \
 	disease-types.svg \
-	epydemic-dynamics-classes.svg
+	synchronous-dynamics-uml.svg \
+	stochastic-dynamics-uml.svg
 
 # Source code that comes along with the book
 SOURCES_DIR = src
