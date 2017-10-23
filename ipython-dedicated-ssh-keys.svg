@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="873px" height="342px" viewBox="0 0 873 342" enable-background="new 0 0 873 342" xml:space="preserve">
+<g>
+	<g>
+		<g enable-background="new    ">
+			<g>
+				<polygon points="687.333,211.819 687.392,220.451 622.1,221.147 622.041,212.517 				"/>
+			</g>
+			<g>
+				<polygon fill="#69992F" points="687.333,211.819 687.392,220.451 674.396,237.703 674.337,229.071 				"/>
+			</g>
+			<g>
+				<polygon points="622.041,212.517 622.1,221.147 604.738,238.18 604.68,229.548 				"/>
+			</g>
+			<g>
+				
+					<rect x="635.222" y="198.796" transform="matrix(-0.0069 -1 1 -0.0069 410.3311 874.7601)" fill="#699A2F" width="8.632" height="69.66"/>
+			</g>
+			<g>
+				<polygon fill="#76AA35" points="687.333,211.819 674.337,229.071 604.68,229.548 622.041,212.517 				"/>
+			</g>
+			<g>
+				<rect x="634.266" y="197.471" transform="matrix(-0.0069 -1 1 -0.0069 408.3534 874.8262)" width="8.632" height="74.34"/>
+			</g>
+			<g>
+				<path d="M620.811,211.521l69.439-0.743l-14.529,19.293l-74.338,0.509L620.811,211.521z M674.337,229.071l12.996-17.252
+					l-65.292,0.697l-17.361,17.031L674.337,229.071"/>
+			</g>
+			<g>
+				<polygon points="690.25,210.777 690.31,219.408 675.78,238.702 675.721,230.07 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="3" x1="486" y1="270" x2="810" y2="270"/>
+<line fill="none" stroke="#000000" stroke-width="3" x1="648" y1="270" x2="648" y2="243"/>
+<line fill="none" stroke="#000000" stroke-width="3" x1="756" y1="270" x2="756" y2="243"/>
+<g>
+	<g>
+		<g enable-background="new    ">
+			<g>
+				<polygon points="219.331,256.819 219.39,265.452 154.097,266.15 154.038,257.519 				"/>
+			</g>
+			<g>
+				<polygon fill="#0087BA" points="219.331,256.819 219.39,265.452 206.405,282.704 206.346,274.072 				"/>
+			</g>
+			<g>
+				<polygon points="154.038,257.519 154.097,266.15 136.736,283.178 136.677,274.546 				"/>
+			</g>
+			<g>
+				
+					<rect x="167.225" y="243.79" transform="matrix(-0.0068 -1 1 -0.0068 -105.9036 452.0688)" fill="#0088BB" width="8.632" height="69.671"/>
+			</g>
+			<g>
+				<polygon fill="#0095CD" points="219.331,256.819 206.346,274.072 136.677,274.546 154.038,257.519 				"/>
+			</g>
+			<g>
+				<rect x="166.269" y="242.474" transform="matrix(-0.0068 -1 1 -0.0068 -107.8808 452.1353)" width="8.632" height="74.333"/>
+			</g>
+			<g>
+				<path d="M152.816,256.522l69.433-0.74l-14.528,19.289l-74.331,0.506L152.816,256.522z M206.346,274.072l12.985-17.253
+					l-65.293,0.699l-17.361,17.027L206.346,274.072"/>
+			</g>
+			<g>
+				<polygon points="222.249,255.782 222.308,264.414 207.78,283.703 207.721,275.071 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="2" x1="234" y1="270" x2="378" y2="270"/>
+<text transform="matrix(1 0 0 1 153.0005 306)" font-family="'MyriadPro-Regular'" font-size="12">Client</text>
+<text transform="matrix(1 0 0 1 396.0005 306)" font-family="'MyriadPro-Regular'" font-size="12">Cluster head</text>
+<text transform="matrix(1 0 0 1 666 288)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="12">Cluster worke</tspan><tspan x="68.591" y="0" font-family="'MyriadPro-Regular'" font-size="12">r</tspan><tspan x="72.274" y="0" font-family="'MyriadPro-Regular'" font-size="12">s</tspan></text>
+<text transform="matrix(1 0 0 1 504 189)"><tspan x="0" y="0" font-family="'CourierNewPSMT'" font-size="12">~/.ssh</tspan><tspan x="0" y="14.4" font-family="'CourierNewPSMT'" font-size="12">    network_rsa.pub</tspan></text>
+<circle fill="#BCBEC0" stroke="#000000" stroke-width="2" cx="414" cy="122" r="27"/>
+<text transform="matrix(1 0 0 1 396 86)" font-family="'MyriadPro-Regular'" font-size="12">ssh agent</text>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="414" y1="149" x2="414" y2="252"/>
+<text transform="matrix(1 0 0 1 90 243)" font-family="'CourierNewPSMT'" font-size="12">network_rsa</text>
+<text transform="matrix(1 0 0 1 270 216)"><tspan x="0" y="0" font-family="'CourierNewPSMT'" font-size="12">~/.ssh</tspan><tspan x="0" y="14.4" font-family="'CourierNewPSMT'" font-size="12">    network_rsa</tspan><tspan x="0" y="28.8" font-family="'CourierNewPSMT'" font-size="12">    network_rsa.pub</tspan></text>
+<circle fill="#EF4136" stroke="#000000" stroke-width="2" cx="450" cy="135" r="27"/>
+<circle fill="#00AEEF" stroke="#000000" stroke-width="2" cx="180" cy="144" r="27"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="693" cy="63" r="27"/>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="180" y1="171" x2="180" y2="252"/>
+<text transform="matrix(1 0 0 1 198 117)" font-family="'MyriadPro-Regular'" font-size="12">Notebook</text>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="450" y1="162" x2="450" y2="261"/>
+<text transform="matrix(1 0 0 1 468 108)" font-family="'MyriadPro-Regular'" font-size="12">Controller</text>
+<g>
+	<g>
+		<g enable-background="new    ">
+			<g>
+				<polygon points="471.331,256.818 471.39,265.45 406.098,266.151 406.039,257.52 				"/>
+			</g>
+			<g>
+				<polygon fill="#B62F26" points="471.331,256.818 471.39,265.45 458.403,282.702 458.345,274.07 				"/>
+			</g>
+			<g>
+				<polygon points="406.039,257.52 406.098,266.151 388.736,283.179 388.677,274.547 				"/>
+			</g>
+			<g>
+				
+					<rect x="419.225" y="243.79" transform="matrix(-0.0068 -1 1 -0.0068 147.7974 704.0465)" fill="#B72F27" width="8.632" height="69.669"/>
+			</g>
+			<g>
+				<polygon fill="#CB362D" points="471.331,256.818 458.345,274.07 388.677,274.547 406.039,257.52 				"/>
+			</g>
+			<g>
+				<rect x="418.268" y="242.474" transform="matrix(-0.0068 -1 1 -0.0068 145.8197 704.1125)" width="8.632" height="74.331"/>
+			</g>
+			<g>
+				<path d="M404.817,256.524l69.432-0.743l-14.529,19.288l-74.33,0.509L404.817,256.524z M458.345,274.07l12.986-17.252
+					l-65.292,0.701l-17.362,17.027L458.345,274.07"/>
+			</g>
+			<g>
+				<polygon points="474.249,255.781 474.308,264.413 459.778,283.701 459.72,275.069 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="648" y1="126" x2="648" y2="207"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="756" cy="90" r="27"/>
+<line fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="12,6" x1="756" y1="117" x2="756" y2="216"/>
+<g>
+	<g>
+		<g enable-background="new    ">
+			<g>
+				<polygon points="795.331,211.819 795.39,220.452 730.097,221.15 730.038,212.519 				"/>
+			</g>
+			<g>
+				<polygon fill="#69992F" points="795.331,211.819 795.39,220.452 782.405,237.704 782.347,229.072 				"/>
+			</g>
+			<g>
+				<polygon points="730.038,212.519 730.097,221.15 712.735,238.178 712.677,229.546 				"/>
+			</g>
+			<g>
+				
+					<rect x="743.225" y="198.789" transform="matrix(-0.0068 -1 1 -0.0068 518.9956 982.7346)" fill="#699A2F" width="8.632" height="69.672"/>
+			</g>
+			<g>
+				<polygon fill="#76AA35" points="795.331,211.819 782.347,229.072 712.677,229.546 730.038,212.519 				"/>
+			</g>
+			<g>
+				<rect x="742.268" y="197.474" transform="matrix(-0.0068 -1 1 -0.0068 517.0175 982.8001)" width="8.632" height="74.333"/>
+			</g>
+			<g>
+				<path d="M728.816,211.522l69.433-0.74l-14.528,19.289l-74.331,0.506L728.816,211.522z M782.347,229.072l12.984-17.253
+					l-65.293,0.699l-17.361,17.027L782.347,229.072"/>
+			</g>
+			<g>
+				<polygon points="798.249,210.782 798.308,219.414 783.779,238.703 783.721,230.071 				"/>
+			</g>
+		</g>
+	</g>
+</g>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="671" cy="81" r="27"/>
+<circle fill="#8DC63F" stroke="#000000" stroke-width="2" cx="653" cy="99" r="27"/>
+<text transform="matrix(1 0 0 1 729 45)" font-family="'MyriadPro-Regular'" font-size="12">Engines</text>
+</svg>
