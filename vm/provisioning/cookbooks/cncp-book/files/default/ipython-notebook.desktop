@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=cncp
-GenericName=IPython notebook server
-Comment=Start the IPython notebook server for the book chapters
-Exec=~/cncp.sh
-Terminal=false
-Type=Application
-X-GNOME-Autostart-enabled=true
